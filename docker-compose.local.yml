@@ -1,0 +1,132 @@
+services:
+  app-nginx:
+    build:
+      context: .
+      dockerfile: docker/app/nginx.dockerfile
+    container_name: v-app-nginx
+    volumes:
+      - ./main:/var/www/app
+      - ./docker/nginx-reverse-proxy/ssl:/etc/nginx/ssl
+    depends_on:
+      - nginx-reverse-proxy
+    networks:
+      net:
+        ipv4_address: 172.31.1.2
+
+  app-php:
+    build:
+      context: .
+      dockerfile: docker/app/php-fpm.dockerfile
+    container_name: v-app-php
+    volumes:
+      - ./main:/var/www/app
+      - ./docker/app/php-ini:/usr/local/etc/php/custom.d
+    environment:
+      PHP_INI_SCAN_DIR: "/usr/local/etc/php/custom.d:/usr/local/etc/php/conf.d"
+    links:
+      - mysql
+#      - mailcatcher
+    depends_on:
+      - app-nginx
+    networks:
+      net:
+        ipv4_address: 172.31.1.3
+
+  queue-worker-php:
+    build:
+      context: .
+      dockerfile: docker/queue-worker/php-fpm.dockerfile
+    container_name: v-qw-php
+    volumes:
+      - ./main:/var/www/qw
+    depends_on:
+      - rabbitmq
+    networks:
+      net:
+        ipv4_address: 172.31.1.4
+
+  quasar:
+    build:
+      context: .
+      dockerfile: docker/quasar/quasar.dockerfile
+      target: develop-stage
+    container_name: v-quasar
+    volumes:
+      - ./quasar:/app
+      - /app/node_modules # такой маунт нужен чтобы при старте контейнера node_modules не пропадали из контейнера
+    command: ["quasar", "dev"]
+    ports:
+      - 3000:3000
+    networks:
+      net:
+        ipv4_address: 172.31.1.6
+
+  centrifugo:
+    image: centrifugo/centrifugo:v5.4
+    container_name: v-centrifugo
+    command: centrifugo -c config.json
+    ports:
+      - 8000:8000
+    volumes:
+      - ./docker/centrifugo:/centrifugo
+    ulimits:
+      nproc: 65536
+      nofile:
+        soft: 65536
+        hard: 65536
+    networks:
+      net:
+        ipv4_address: 172.31.1.250
+
+  nginx-reverse-proxy:
+    build:
+      context: .
+      dockerfile: docker/nginx-reverse-proxy/nginx.dockerfile
+    container_name: v-nginx-reverse-proxy
+    volumes:
+      - ./docker/nginx-reverse-proxy/ssl:/etc/nginx/ssl
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      net:
+        ipv4_address: 172.31.1.251
+
+  mysql:
+    build:
+      context: .
+      dockerfile: docker/app/mysql.dockerfile
+    container_name: v-app-mysql
+    volumes:
+      - ./Makefile:/Makefile
+    ports:
+      - 53307:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=v_db
+    networks:
+      net:
+        ipv4_address: 172.31.1.252
+
+  rabbitmq:
+    container_name: v-rabbitmq
+    image: rabbitmq:3.11.2-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=root
+    ports:
+      # HTTP management UI
+      - 15672:15672
+    expose:
+      # AMQP protocol port
+      - 5672
+    networks:
+      net:
+        ipv4_address: 172.31.1.254
+
+networks:
+  net:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.31.1.0/24"
