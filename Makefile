@@ -1,4 +1,4 @@
-# include ./main/.env
+include ./main/.env
 
 .PHONY: pg dump import docker quasar
 

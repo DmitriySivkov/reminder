@@ -49,7 +49,7 @@ services:
     build:
       context: .
       dockerfile: docker/quasar/quasar.dockerfile
-      target: develop-stage
+      target: reminder-develop-stage
     container_name: v-quasar
     volumes:
       - ./quasar:/app

@@ -1,16 +1,5 @@
-/* eslint-env node */
-
-/*
- * This file runs in a Node context (it's NOT transpiled by Babel), so use only
- * the ES6 features that are supported by your Node version. https://node.green/
- */
-
-// Configuration for your app
-// https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
-
-
-const { configure } = require('quasar/wrappers');
-
+import "dotenv/config.js"
+import { configure } from "quasar/wrappers"
 
 module.exports = configure(function (/* ctx */) {
   return {
@@ -30,8 +19,8 @@ module.exports = configure(function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli/boot-files
     boot: [
-      
-      
+
+
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
@@ -79,7 +68,7 @@ module.exports = configure(function (/* ctx */) {
       // extendViteConf (viteConf) {},
       // viteVuePluginOptions: {},
 
-      
+
       // vitePlugins: [
       //   [ 'package-name', { ..options.. } ]
       // ]
@@ -87,8 +76,18 @@ module.exports = configure(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
-      // https: true
-      open: true // opens browser window automatically
+      https: true,
+      port: 3000,
+      fs: {
+        cachedChecks: true
+      },
+      hmr: {
+        host: process.env.BACKEND_HOST,
+        clientPort: 443,
+      },
+      open: false, // open browser on load
+
+      /** best to leave capacitor host as localhost: https://capacitorjs.com/docs/config#schema (section 'server') **/
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
