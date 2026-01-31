@@ -1,4 +1,4 @@
-# Vipolnyaika (quasar)
+# Reminder (quasar)
 
 A Quasar Project
 

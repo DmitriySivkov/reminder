@@ -1,0 +1,15 @@
+{
+  "name": "quasar",
+  "version": "0.0.1",
+  "description": "A Quasar Project",
+  "author": "Dmitrii Sivkov <sivkovdw@yandex.ru>",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/app": "^7.0.0",
+    "@capacitor/cli": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/splash-screen": "^7.0.0",
+    "@jcesarmobile/ssl-skip": "^0.4.0"
+  }
+}

@@ -2,7 +2,7 @@
   "name": "quasar",
   "version": "0.0.1",
   "description": "A Quasar Project",
-  "productName": "Vipolnyaika",
+  "productName": "Reminder",
   "author": "Dmitrii Sivkov <sivkovdw@yandex.ru>",
   "private": true,
   "scripts": {
@@ -37,6 +37,6 @@
     "prettier": "^2.5.1"
   },
   "optionalDependencies": {
-    "@rollup/rollup-win32-x64-msvc": "^4.25.0"
+    "@rollup/rollup-win32-x64-msvc": "^4.57.1"
   }
 }
