@@ -9,7 +9,10 @@
     "@capacitor/app": "^7.0.0",
     "@capacitor/cli": "^7.0.0",
     "@capacitor/core": "^7.0.0",
+    "@capacitor/device": "^7.0.3",
+    "@capacitor/preferences": "^7.0.3",
     "@capacitor/splash-screen": "^7.0.0",
+    "@capacitor/status-bar": "^7.0.4",
     "@jcesarmobile/ssl-skip": "^0.4.0"
   }
 }
