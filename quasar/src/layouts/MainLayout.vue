@@ -32,10 +32,6 @@ onMounted(async() => {
 				value: identifier
 			})
 		})
-
-		promise.catch((error) => {
-			notifyError(error)
-		})
 	}
 
 	isLoading.value = false
@@ -47,14 +43,12 @@ onMounted(async() => {
 		<q-header elevated>
 			<q-toolbar>
 				<q-toolbar-title>
-					Reminder App
+					Ваш ID: {{ deviceId }}
 				</q-toolbar-title>
 			</q-toolbar>
 		</q-header>
 
 		<q-page-container>
-			<!--      <router-view />-->
-			{{ deviceId }}
 			<q-inner-loading :showing="isLoading">
 				<q-spinner-gears
 					size="42px"

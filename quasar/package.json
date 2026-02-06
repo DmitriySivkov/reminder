@@ -6,14 +6,15 @@
   "author": "Dmitrii Sivkov <sivkovdw@yandex.ru>",
   "private": true,
   "scripts": {
-    "dev": "quasar dev",
-    "build": "quasar build",
-    "serve": "quasar serve",
-    "lint": "eslint --ext .js,.vue ./",
-    "format": "prettier --write \"**/*.{js,vue,scss,html,md,json}\" --ignore-path .gitignore",
-    "test": "echo \"No test specified\" && exit 0"
+		"lint": "eslint --ext .js,.ts,.vue ./",
+		"format": "prettier --write \"**/*.{js,ts,vue,css,html,md,json}\" --ignore-path .gitignore",
+		"test": "echo \"No test specified\" && exit 0",
+		"dev": "npm run copy:sql:wasm && quasar dev",
+		"build:web": "npm run copy:sql:wasm && quasar build",
+		"copy:sql:wasm": "copyfiles -u 3 node_modules/sql.js/dist/sql-wasm.wasm public/assets"
   },
   "dependencies": {
+    "@capacitor-community/sqlite": "^7.0.3",
     "@capacitor/cli": "^7.0.0",
     "@capacitor/core": "^7.0.0",
     "@capacitor/device": "^7.0.3",
