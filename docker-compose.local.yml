@@ -54,7 +54,7 @@ services:
     volumes:
       - ./quasar:/app
       - /app/node_modules # такой маунт нужен чтобы при старте контейнера node_modules не пропадали из контейнера
-    command: ["quasar", "dev"]
+    command: ["npm", "run", "dev"]
     ports:
       - 3000:3000
     networks:

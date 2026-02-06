@@ -80,9 +80,23 @@ module.exports = configure(function (ctx) {
 			// viteVuePluginOptions: {},
 
 
-			// vitePlugins: [
-			//   [ 'package-name', { ..options.. } ]
-			// ]
+			vitePlugins: [
+			  [ "CapacitorSQLite", {
+					iosDatabaseLocation: "Library/reminderDB",
+					iosIsEncryption: true,
+					iosKeychainPrefix: "reminder-app",
+					iosBiometric: {
+						biometricAuth: false,
+						biometricTitle : "Biometric login for capacitor sqlite"
+					},
+					androidIsEncryption: true,
+					androidBiometric: {
+						biometricAuth : false,
+						biometricTitle : "Biometric login for capacitor sqlite",
+						biometricSubTitle : "Log in using your biometric"
+					},
+				} ]
+			]
 		},
 
 		// Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer

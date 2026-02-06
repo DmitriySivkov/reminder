@@ -21,7 +21,7 @@ class StorageService implements IStorageService {
 	loadToVersion =
 		UserUpgradeStatements[UserUpgradeStatements.length - 1].toVersion;
 	db!: SQLiteDBConnection | undefined;
-	database = 'myuserdb';
+	database = 'reminderDB';
 	sqliteServ!: ISQLiteService;
 	dbVerServ!: IDbVersionService;
 	isInitCompleted = new BehaviorSubject(false);

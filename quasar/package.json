@@ -6,12 +6,12 @@
   "author": "Dmitrii Sivkov <sivkovdw@yandex.ru>",
   "private": true,
   "scripts": {
-		"lint": "eslint --ext .js,.ts,.vue ./",
-		"format": "prettier --write \"**/*.{js,ts,vue,css,html,md,json}\" --ignore-path .gitignore",
-		"test": "echo \"No test specified\" && exit 0",
-		"dev": "npm run copy:sql:wasm && quasar dev",
-		"build:web": "npm run copy:sql:wasm && quasar build",
-		"copy:sql:wasm": "copyfiles -u 3 node_modules/sql.js/dist/sql-wasm.wasm public/assets"
+    "lint": "eslint --ext .js,.ts,.vue ./",
+    "format": "prettier --write \"**/*.{js,ts,vue,css,html,md,json}\" --ignore-path .gitignore",
+    "test": "echo \"No test specified\" && exit 0",
+    "dev": "npm run copy:sql:wasm && quasar dev",
+    "build:web": "npm run copy:sql:wasm && quasar build",
+    "copy:sql:wasm": "copyfiles -u 3 node_modules/sql.js/dist/sql-wasm.wasm public/assets"
   },
   "dependencies": {
     "@capacitor-community/sqlite": "^7.0.3",
@@ -31,12 +31,14 @@
     "pinia": "^3.0.3",
     "pinia-plugin-persistedstate": "^4.0.2",
     "quasar": "^2.6.0",
+    "sql.js": "^1.12.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0"
   },
   "devDependencies": {
     "@quasar/app-vite": "^2.4.0",
     "autoprefixer": "^10.4.2",
+    "copyfiles": "^2.4.1",
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-vue": "^9.0.0",
