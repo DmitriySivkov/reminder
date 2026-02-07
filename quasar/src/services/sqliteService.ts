@@ -9,6 +9,7 @@ import { Capacitor } from '@capacitor/core'
 export interface ISQLiteService {
 	addUpgradeStatement(options: capSQLiteUpgradeOptions): Promise<void>;
 	closeDatabase(dbName: string, readOnly: boolean): Promise<void>;
+	deleteDatabase(dbName: string): Promise<void>;
 	getPlatform(): string;
 	initWebStore(): Promise<void>;
 	isConnection(dbName: string, readOnly: boolean): Promise<boolean>;
@@ -54,6 +55,18 @@ class SQLiteService implements ISQLiteService {
 		} catch (error: any) {
 			const msg = error.message ? error.message : error;
 			throw new Error(`sqliteService.closeDatabase: ${msg}`);
+		}
+	}
+
+	async deleteDatabase(dbName: string): Promise<void> {
+		try {
+			await this.closeDatabase(dbName, true)
+			await this.sqlitePlugin.deleteDatabase({ database: dbName})
+			return;
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		} catch (error: any) {
+			const msg = error.message ? error.message : error;
+			throw new Error(`sqliteService.deleteDatabase: ${msg}`);
 		}
 	}
 

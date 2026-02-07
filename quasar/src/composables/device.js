@@ -31,7 +31,8 @@ export const useDevice = () => {
 		}
 
 		return {
-			platform: "android"
+			platform: "android",
+			model: "device test model"
 		}
 	}
 

@@ -3,6 +3,8 @@
 node_modules
 .env
 
+public/assets/sql-wasm.wasm
+
 # Quasar core related directories
 .quasar
 /dist

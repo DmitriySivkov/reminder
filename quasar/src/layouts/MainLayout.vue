@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue"
 import { useDevice } from "src/composables/device"
 import { useStorage } from "src/composables/storage"
 import { api } from "src/boot/axios"
+import MainFooter from "src/layouts/MainFooter.vue"
 
 const isLoading = ref(true)
 const deviceId = ref(null)
@@ -12,18 +13,17 @@ const { set, has } = useStorage()
 
 onMounted(async() => {
 	const { identifier } = await getDeviceId()
-	const { platform } = await getDeviceInfo()
+	const { platform, model } = await getDeviceInfo()
 
 	deviceId.value = identifier
 
 	let hasDeviceKey = await has(deviceIdKey)
 
 	if (!hasDeviceKey) {
-		// todo 1 - check if internet connection is on
-		// todo 2 - if app is reinstalled then device_id is the same. Instead of storing - only check for existence
 		const promise = api.post("users", {
 			device_id: deviceId.value,
-			platform
+			platform,
+			device_model: model
 		})
 
 		promise.then(async() => {
@@ -40,21 +40,16 @@ onMounted(async() => {
 
 <template>
 	<q-layout view="lHh Lpr lFf">
-		<q-header elevated>
-			<q-toolbar>
-				<q-toolbar-title>
-					Ваш ID: {{ deviceId }}
-				</q-toolbar-title>
-			</q-toolbar>
-		</q-header>
-
 		<q-page-container>
-			<q-inner-loading :showing="isLoading">
-				<q-spinner-gears
-					size="42px"
-					color="primary"
-				/>
-			</q-inner-loading>
+			<router-view />
 		</q-page-container>
+
+		<MainFooter>
+			<q-toolbar>
+				<q-btn to="/">
+					<q-icon name="home" />
+				</q-btn>
+			</q-toolbar>
+		</MainFooter>
 	</q-layout>
 </template>

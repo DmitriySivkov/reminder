@@ -12,10 +12,12 @@ class UserController extends Controller
         // todo - install ide-helper
         $deviceId = $request->input('device_id');
         $platform = $request->input('platform');
+        $deviceModel = $request->input('device_model');
 
         return User::create([
-            'device_id' => $deviceId,
-            'platform' => $platform
+            'device_id'     => $deviceId,
+            'platform'      => $platform,
+            'device_model'  => $deviceModel
         ]);
     }
 }

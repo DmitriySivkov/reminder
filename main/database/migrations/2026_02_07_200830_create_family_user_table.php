@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->nullable();
-            $table->string('device_id')->unique();
-            $table->string('platform');
-            $table->string('device_model');
-            $table->timestamps();
+        Schema::create('family_user', function (Blueprint $table) {
+            $table->unsignedInteger('family_id');
+            $table->unsignedInteger('user_id');
         });
     }
 
@@ -26,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('family_user');
     }
 };

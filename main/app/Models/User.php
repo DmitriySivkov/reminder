@@ -10,4 +10,9 @@ class User extends Authenticatable
     use HasFactory;
 
     protected $guarded = [];
+
+    public function families()
+    {
+        return $this->belongsToMany(Family::class);
+    }
 }

@@ -22,7 +22,7 @@ class InitializeAppService implements IInitializeAppService {
 				if (this.platform === 'web') {
 					await this.sqliteServ.initWebStore();
 				}
-				// Initialize the myuserdb database
+				// Initialize the database
 				await this.storageServ.initializeDatabase();
 				if (this.platform === 'web') {
 					await this.sqliteServ.saveToStore(this.storageServ.getDatabaseName());

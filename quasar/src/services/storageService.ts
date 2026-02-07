@@ -7,7 +7,7 @@ import { UserUpgradeStatements } from 'src/upgrades/user.statements'
 import { User } from 'src/models/User'
 
 export interface IStorageService {
-	addUser(user: User): Promise<number>;
+	add(table, entity): Promise<number>;
 	deleteUserById(id: string): Promise<void>;
 	getDatabaseName(): string;
 	getDatabaseVersion(): number;
@@ -38,15 +38,15 @@ class StorageService implements IStorageService {
 			this.appInstance?.appContext.config.globalProperties.$platform;
 	}
 
-	async addUser(user: User): Promise<number> {
+	async add(table, entity): Promise<number> {
 		// add a user to the database
-		const colList = Object.keys(user).slice(1).toString();
-		const valArr = Object.values(user).slice(1);
+		const colList = Object.keys(entity).toString();
+		const valArr = Object.values(entity);
 		const valList: string = valArr
 			.map((value) => (typeof value === 'string' ? `'${value}'` : value))
 			.join(',');
 
-		const sql = `INSERT INTO users (${colList}) VALUES (${valList});`;
+		const sql = `INSERT INTO ${table} (${colList}) VALUES (${valList});`;
 		const res = await this.db?.run(sql, []);
 		if (
 			res?.changes !== undefined &&
@@ -55,7 +55,7 @@ class StorageService implements IStorageService {
 		) {
 			return res.changes.lastId;
 		} else {
-			throw new Error('storageService.addUser: lastId not returned');
+			throw new Error('storageService.add: lastId not returned');
 		}
 	}
 
