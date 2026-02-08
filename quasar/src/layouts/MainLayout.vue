@@ -4,6 +4,9 @@ import { useDevice } from "src/composables/device"
 import { useStorage } from "src/composables/storage"
 import { api } from "src/boot/axios"
 import MainFooter from "src/layouts/MainFooter.vue"
+import { useNotification } from "src/composables/notification"
+
+const { notifyError } = useNotification()
 
 const isLoading = ref(true)
 const deviceId = ref(null)
@@ -24,6 +27,11 @@ onMounted(async() => {
 			device_id: deviceId.value,
 			platform,
 			device_model: model
+		})
+
+		promise.catch((error) => {
+			notifyError(process.env.BACKEND_SERVER + "/api")
+			notifyError(error)
 		})
 
 		promise.then(async() => {

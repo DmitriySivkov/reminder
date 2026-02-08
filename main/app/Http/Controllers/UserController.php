@@ -14,10 +14,15 @@ class UserController extends Controller
         $platform = $request->input('platform');
         $deviceModel = $request->input('device_model');
 
-        return User::create([
-            'device_id'     => $deviceId,
-            'platform'      => $platform,
-            'device_model'  => $deviceModel
-        ]);
+        // todo check unique by device_id
+        return User::firstOrCreate(
+            [
+                'device_id' => $deviceId
+            ],
+            [
+                'device_id'     => $deviceId,
+                'platform'      => $platform,
+                'device_model'  => $deviceModel
+            ]);
     }
 }

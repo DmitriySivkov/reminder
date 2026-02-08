@@ -87,7 +87,7 @@ const openDatabase = async () => {
 }
 
 const getFamilies = async () => {
-	families.value = await useQuerySQLite(db.value, "SELECT * FROM families", [])
+	families.value = await storageServ?.getAll()
 }
 
 onMounted(async() => {
@@ -95,6 +95,7 @@ onMounted(async() => {
 	await getFamilies()
 })
 
+// todo - find out if required
 // onMounted(() => {
 // 	storageServ?.isInitCompleted.subscribe(async (value) => {
 // 		isDbInitCompleted.value = value
@@ -119,10 +120,10 @@ onMounted(async() => {
 // 	})
 // })
 
-// onBeforeUnmount(() => {
-// 	// Close the connection to the database
-// 	sqliteServ?.closeDatabase(storageServ?.getDatabaseName(), false)
-// })
+onBeforeUnmount(() => {
+	// Close the connection to the database. Without closing the connection the data is not written
+	sqliteServ?.closeDatabase(storageServ?.getDatabaseName(), false)
+})
 </script>
 
 <template>

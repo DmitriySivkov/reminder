@@ -5,6 +5,7 @@
   "author": "Dmitrii Sivkov <sivkovdw@yandex.ru>",
   "private": true,
   "dependencies": {
+    "@capacitor-community/sqlite": "^7.0.3",
     "@capacitor/android": "^7.0.0",
     "@capacitor/app": "^7.0.0",
     "@capacitor/cli": "^7.0.0",
@@ -13,6 +14,7 @@
     "@capacitor/preferences": "^7.0.3",
     "@capacitor/splash-screen": "^7.0.0",
     "@capacitor/status-bar": "^7.0.4",
-    "@jcesarmobile/ssl-skip": "^0.4.0"
+    "@jcesarmobile/ssl-skip": "^0.4.0",
+    "sql.js": "^1.12.0"
   }
 }

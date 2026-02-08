@@ -62,7 +62,7 @@ module.exports = configure(function (ctx) {
 			// publicPath: '/',
 			// analyze: true,
 			env: {
-				BACKEND_SERVER: ctx.dev ? (ctx.mode.spa ? process.env.BACKEND_SERVER : (ctx.mode.capacitor ? "https://192.168.1.3" : null)) :
+				BACKEND_SERVER: ctx.dev ? (ctx.mode.spa ? process.env.BACKEND_SERVER : (ctx.mode.capacitor ? "https://192.168.1.2" : null)) :
 					process.env.BACKEND_SERVER,
 				BACKEND_HOST: process.env.BACKEND_HOST,
 				SESSION_DOMAIN: ctx.dev ?
@@ -80,23 +80,7 @@ module.exports = configure(function (ctx) {
 			// viteVuePluginOptions: {},
 
 
-			vitePlugins: [
-			  [ "CapacitorSQLite", {
-					iosDatabaseLocation: "Library/reminderDB",
-					iosIsEncryption: true,
-					iosKeychainPrefix: "reminder-app",
-					iosBiometric: {
-						biometricAuth: false,
-						biometricTitle : "Biometric login for capacitor sqlite"
-					},
-					androidIsEncryption: true,
-					androidBiometric: {
-						biometricAuth : false,
-						biometricTitle : "Biometric login for capacitor sqlite",
-						biometricSubTitle : "Log in using your biometric"
-					},
-				} ]
-			]
+			// vitePlugins: []
 		},
 
 		// Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer

@@ -11,7 +11,7 @@ export interface IStorageService {
 	deleteUserById(id: string): Promise<void>;
 	getDatabaseName(): string;
 	getDatabaseVersion(): number;
-	getUsers(): Promise<User[]>;
+	getAll(): Promise<User[]>;
 	initializeDatabase(): Promise<void>;
 	replaceUser(user: User): Promise<void>;
 	updateUserActiveById(id: string, active: number): Promise<void>;
@@ -48,6 +48,7 @@ class StorageService implements IStorageService {
 
 		const sql = `INSERT INTO ${table} (${colList}) VALUES (${valList});`;
 		const res = await this.db?.run(sql, []);
+
 		if (
 			res?.changes !== undefined &&
 			res.changes.lastId !== undefined &&
@@ -75,9 +76,9 @@ class StorageService implements IStorageService {
 		return this.loadToVersion;
 	}
 
-	async getUsers(): Promise<User[]> {
+	async getAll(): Promise<User[]> {
 		// return all users
-		return (await this.db?.query('SELECT * FROM users;'))?.values as User[];
+		return (await this.db?.query('SELECT * FROM families;'))?.values;
 	}
 
 	async initializeDatabase(): Promise<void> {
