@@ -11,7 +11,6 @@ export interface IStorageService {
 	deleteUserById(id: string): Promise<void>;
 	getDatabaseName(): string;
 	getDatabaseVersion(): number;
-	getAll(): Promise<User[]>;
 	initializeDatabase(): Promise<void>;
 	replaceUser(user: User): Promise<void>;
 	updateUserActiveById(id: string, active: number): Promise<void>;
@@ -74,11 +73,6 @@ class StorageService implements IStorageService {
 	getDatabaseVersion(): number {
 		// return the database version
 		return this.loadToVersion;
-	}
-
-	async getAll(): Promise<User[]> {
-		// return all users
-		return (await this.db?.query('SELECT * FROM families;'))?.values;
 	}
 
 	async initializeDatabase(): Promise<void> {

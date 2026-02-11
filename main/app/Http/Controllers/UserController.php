@@ -14,7 +14,6 @@ class UserController extends Controller
         $platform = $request->input('platform');
         $deviceModel = $request->input('device_model');
 
-        // todo check unique by device_id
         return User::firstOrCreate(
             [
                 'device_id' => $deviceId

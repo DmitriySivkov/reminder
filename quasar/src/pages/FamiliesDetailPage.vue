@@ -4,18 +4,23 @@ import AddFamilyDialog from "src/dialogs/familyDialog.vue"
 import { inject, onMounted, ref } from "vue"
 import { Dialog } from "quasar"
 import { api } from "src/boot/axios"
+import { useRoute } from "vue-router"
 import { useNotification } from "src/composables/notification"
 
 const sqliteServ = inject("sqliteServ")
 const storageServ = inject("storageServ")
+const db = ref(null)
 
-const families = ref([])
+const route = useRoute()
+
+const family = ref(null)
+const familyUsers = ref([])
 
 const { notifyError } = useNotification()
 
 const isLoading = ref(false)
 
-const showAddFamilyDialog = ({ name, familyExternalId }) => {
+const showAddUserToFamilyDialog = ({ name, familyExternalId }) => {
 	Dialog.create({
 		component: AddFamilyDialog,
 		componentProps: {
@@ -24,18 +29,18 @@ const showAddFamilyDialog = ({ name, familyExternalId }) => {
 		}
 	}).onOk(({ name, familyExternalId }) => {
 		if (familyExternalId !== null) {
-			updateFamily({ name, familyExternalId })
+			updateFamilyUser({ name, familyExternalId })
 		} else {
-			storeFamily({ name })
+			storeFamilyUser({ name })
 		}
 	})
 }
 
-const updateFamily = ({ name, familyIndex }) => {
+const updateFamilyUser = ({ name, familyIndex }) => {
 
 }
 
-const storeFamily = ({ name }) => {
+const storeFamilyUser = ({ name }) => {
 	isLoading.value = true
 
 	const promise = api.post("families", {
@@ -56,7 +61,7 @@ const storeFamily = ({ name }) => {
 	promise.finally(() => isLoading.value = false)
 }
 
-const storeFamilyOnDevice = async (family) => {
+const storeFamilyUserOnDevice = async (family) => {
 	const isConn = await sqliteServ?.isConnection(storageServ?.getDatabaseName(), false)
 
 	if (!isConn) {
@@ -69,14 +74,18 @@ const storeFamilyOnDevice = async (family) => {
 	families.value.push(family)
 }
 
-const getFamilies = async () => {
-	const result = await storageServ.db?.query("SELECT * FROM families;")
-	families.value = result?.values
+const getFamilyUsers = async () => {
+	familyUsers.value = await storageServ?.getAll()
+}
+
+const getFamily = async () => {
+	const result = await storageServ.db?.query("SELECT * FROM families WHERE id=" + route.params.family_id + ";")
+	family.value = result?.values[0]
 }
 
 onMounted(async() => {
-	// todo - try to avoid blinking cause of db query on mount
-	await getFamilies()
+	await getFamily()
+	// await getFamilyUsers()
 })
 </script>
 
@@ -84,39 +93,12 @@ onMounted(async() => {
 	<MainHeader>
 		<q-toolbar>
 			<q-toolbar-title>
-				Семья
+				{{ family?.name }}
 			</q-toolbar-title>
-
-			<q-btn
-				flat
-				@click="showAddFamilyDialog"
-				:loading="isLoading"
-			>
-				<q-icon name="add" />
-			</q-btn>
 		</q-toolbar>
 	</MainHeader>
 
 	<q-page>
-		<q-list
-			separator
-			dark
-			class="q-mt-xs"
-		>
-			<q-item
-				v-for="family in families"
-				:key="family.id"
-				clickable
-				class="bg-primary text-white q-py-lg q-px-md"
-				:to="`/families/${family.id}`"
-			>
-				<q-item-section>
-					{{ family.name }}
-				</q-item-section>
-				<q-item-section avatar>
-					<q-icon name="edit" />
-				</q-item-section>
-			</q-item>
-		</q-list>
+		123
 	</q-page>
 </template>

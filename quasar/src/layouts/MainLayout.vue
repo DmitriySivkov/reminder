@@ -53,10 +53,13 @@ onMounted(async() => {
 		</q-page-container>
 
 		<MainFooter>
-			<q-toolbar>
-				<q-btn to="/">
-					<q-icon name="home" />
-				</q-btn>
+			<q-toolbar class="q-py-xs">
+				<q-btn
+					flat
+					to="/"
+					size="lg"
+					icon="home"
+				/>
 			</q-toolbar>
 		</MainFooter>
 	</q-layout>

@@ -90,10 +90,10 @@ module.exports = configure(function (ctx) {
 			fs: {
 				cachedChecks: true
 			},
-			hmr: {
-				host: process.env.BACKEND_HOST,
-				clientPort: 443,
-			},
+			// hmr: {
+			// 	host: process.env.BACKEND_HOST,
+			// 	clientPort: 443,
+			// },
 			open: false, // open browser on load
 
 			/** best to leave capacitor host as localhost: https://capacitorjs.com/docs/config#schema (section 'server') **/
