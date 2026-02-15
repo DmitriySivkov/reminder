@@ -9,7 +9,6 @@ class UserController extends Controller
 {
     public function store(Request $request)
     {
-        // todo - install ide-helper
         $deviceId = $request->input('device_id');
         $platform = $request->input('platform');
         $deviceModel = $request->input('device_model');
@@ -23,5 +22,12 @@ class UserController extends Controller
                 'platform'      => $platform,
                 'device_model'  => $deviceModel
             ]);
+    }
+
+    public function search(Request $request)
+    {
+        $deviceId = $request->input('device_id');
+
+        return User::where('device_id', $deviceId)->get();
     }
 }

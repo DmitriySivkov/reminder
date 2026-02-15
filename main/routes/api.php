@@ -17,10 +17,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'users'], function() {
 	Route::post('', [\App\Http\Controllers\UserController::class, 'store']);
+    Route::get('search', [\App\Http\Controllers\UserController::class, 'search']);
 });
 
 Route::group(['prefix' => 'families'], function() {
     Route::get('', [\App\Http\Controllers\FamilyController::class, 'index']);
     Route::post('', [\App\Http\Controllers\FamilyController::class, 'store']);
     Route::put('{family}', [\App\Http\Controllers\FamilyController::class, 'update']);
+
+    Route::post('{family}/users', [\App\Http\Controllers\FamilyController::class, 'addUser']);
 });

@@ -2,29 +2,32 @@
 import { ref, onMounted } from "vue"
 import { useDevice } from "src/composables/device"
 import { useStorage } from "src/composables/storage"
+import { useUserStore } from "src/stores/user"
 import { api } from "src/boot/axios"
 import MainFooter from "src/layouts/MainFooter.vue"
 import { useNotification } from "src/composables/notification"
 
 const { notifyError } = useNotification()
 
+const userStore = useUserStore()
+
 const isLoading = ref(true)
-const deviceId = ref(null)
 
 const { getDeviceId, deviceIdKey, getDeviceInfo } = useDevice()
 const { set, has } = useStorage()
 
 onMounted(async() => {
+	// todo - probably move to boot file
 	const { identifier } = await getDeviceId()
 	const { platform, model } = await getDeviceInfo()
 
-	deviceId.value = identifier
+	userStore.setDeviceId(identifier)
 
 	let hasDeviceKey = await has(deviceIdKey)
 
 	if (!hasDeviceKey) {
 		const promise = api.post("users", {
-			device_id: deviceId.value,
+			device_id: userStore.deviceId,
 			platform,
 			device_model: model
 		})

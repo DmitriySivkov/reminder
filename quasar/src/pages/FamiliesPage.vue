@@ -1,6 +1,6 @@
 <script setup>
 import MainHeader from "src/layouts/MainHeader.vue"
-import AddFamilyDialog from "src/dialogs/familyDialog.vue"
+import FamilyDialog from "src/dialogs/familyDialog.vue"
 import { inject, onMounted, ref } from "vue"
 import { Dialog } from "quasar"
 import { api } from "src/boot/axios"
@@ -15,9 +15,9 @@ const { notifyError } = useNotification()
 
 const isLoading = ref(false)
 
-const showAddFamilyDialog = ({ name, familyExternalId }) => {
+const showFamilyDialog = ({ name, familyExternalId }) => {
 	Dialog.create({
-		component: AddFamilyDialog,
+		component: FamilyDialog,
 		componentProps: {
 			name,
 			familyExternalId
@@ -89,7 +89,7 @@ onMounted(async() => {
 
 			<q-btn
 				flat
-				@click="showAddFamilyDialog"
+				@click="showFamilyDialog"
 				:loading="isLoading"
 			>
 				<q-icon name="add" />
