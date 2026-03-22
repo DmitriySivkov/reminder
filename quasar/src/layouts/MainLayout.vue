@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue"
+import { ref, onMounted, inject } from "vue"
 import { useDevice } from "src/composables/device"
 import { useStorage } from "src/composables/storage"
 import { useUserStore } from "src/stores/user"
@@ -9,6 +9,7 @@ import { useNotification } from "src/composables/notification"
 
 const { notifyError } = useNotification()
 
+const storageServ = inject("storageServ")
 const userStore = useUserStore()
 
 const isLoading = ref(true)
@@ -32,16 +33,25 @@ onMounted(async() => {
 			device_model: model
 		})
 
-		promise.catch((error) => {
-			notifyError(process.env.BACKEND_SERVER + "/api")
-			notifyError(error)
-		})
-
-		promise.then(async() => {
+		promise.then(async(response) => {
 			await set({
 				key: deviceIdKey,
 				value: identifier
 			})
+
+			const deviceUser = {
+				external_id: response.data.id,
+				name: response.data.name ?? response.data.device_id,
+				is_device_user: 1
+				//todo - сделать чтобы юзер вводил свое имя (которое видят все) при первой инициализации приложения
+			}
+
+			await storageServ?.add("users", deviceUser)
+		})
+
+		promise.catch((error) => {
+			notifyError(process.env.BACKEND_SERVER + "/api")
+			notifyError(error)
 		})
 	}
 

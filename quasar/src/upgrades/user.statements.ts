@@ -6,7 +6,8 @@ export const UserUpgradeStatements = [
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              external_id INTEGER NOT NULL,
              name TEXT NOT NULL,
-             display_name TEXT
+             display_name TEXT,
+						 is_device_user INTEGER NOT NULL DEFAULT 0
              );`,
 			`CREATE TABLE IF NOT EXISTS families (
              id INTEGER PRIMARY KEY AUTOINCREMENT,

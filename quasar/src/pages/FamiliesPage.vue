@@ -66,6 +66,13 @@ const storeFamilyOnDevice = async (family) => {
 
 	family.id = await storageServ?.add("families", family)
 
+	const deviceUser = await storageServ.db?.query("SELECT * FROM users WHERE is_device_user = 1;")
+	console.log(deviceUser)
+	await storageServ?.add("family_user", {
+		family_id: family.id,
+		user_id: deviceUser[0].id
+	})
+
 	families.value.push(family)
 }
 

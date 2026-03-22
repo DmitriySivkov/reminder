@@ -43,7 +43,6 @@ const updateFamilyUser = ({ name, familyUserExternalId }) => {
 }
 
 const storeFamilyUser = (user) => {
-	console.log(user)
 	isLoading.value = true
 
 	const promise = api.post(`families/${route.params.family_id}/users`, {
@@ -55,7 +54,7 @@ const storeFamilyUser = (user) => {
 		storeFamilyUserOnDevice({
 			external_id: response.data.id,
 			name: response.data.name,
-			display_name: response.data.display_name
+			// todo - add display name on user add to family form
 		})
 	})
 
