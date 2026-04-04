@@ -28,8 +28,6 @@ class FamilyController extends Controller
 
         $addUser = User::where('device_id', $deviceId)->firstOrFail();
 
-        // todo - на фронте при создании семьи добавлять создателя семьи в список юзеров семьи. Затем тестить добавление юзера в семью
-
         $family->users()->attach($addUser->id);
 
         return $family;

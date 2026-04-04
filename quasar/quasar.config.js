@@ -62,6 +62,7 @@ module.exports = configure(function (ctx) {
 
 			// publicPath: '/',
 			// analyze: true,
+
 			env: {
 				BACKEND_SERVER: ctx.dev ? (ctx.mode.spa ? process.env.BACKEND_SERVER : (ctx.mode.capacitor ? "https://192.168.1.2" : null)) :
 					process.env.BACKEND_SERVER,

@@ -5,9 +5,11 @@ import { inject, onMounted, ref } from "vue"
 import { Dialog } from "quasar"
 import { api } from "src/boot/axios"
 import { useNotification } from "src/composables/notification"
+import { useUserStore } from "src/stores/user"
 
 const sqliteServ = inject("sqliteServ")
 const storageServ = inject("storageServ")
+const userStore = useUserStore()
 
 const families = ref([])
 
@@ -39,7 +41,8 @@ const storeFamily = ({ name }) => {
 	isLoading.value = true
 
 	const promise = api.post("families", {
-		name
+		name,
+		device_id: userStore.deviceId
 	})
 
 	promise.then((response) => {
@@ -66,11 +69,11 @@ const storeFamilyOnDevice = async (family) => {
 
 	family.id = await storageServ?.add("families", family)
 
-	const deviceUser = await storageServ.db?.query("SELECT * FROM users WHERE is_device_user = 1;")
-	console.log(deviceUser)
+	const result = await storageServ.db?.query("SELECT * FROM users WHERE is_device_user = 1;")
+
 	await storageServ?.add("family_user", {
 		family_id: family.id,
-		user_id: deviceUser[0].id
+		user_id: result?.values[0].id
 	})
 
 	families.value.push(family)
