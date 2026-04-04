@@ -101,7 +101,7 @@ onMounted(async() => {
 	<MainHeader>
 		<q-toolbar>
 			<q-toolbar-title>
-				{{ family?.name }}
+				Семья {{ family?.name }}
 			</q-toolbar-title>
 
 			<q-btn

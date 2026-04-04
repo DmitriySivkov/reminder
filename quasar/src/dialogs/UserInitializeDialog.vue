@@ -8,30 +8,11 @@ defineEmits([
 
 const { dialogRef, onDialogHide, onDialogOK } = useDialogPluginComponent()
 
-const props = defineProps({
-	name: {
-		type: String,
-		required: false,
-		default: null
-	},
-	familyExternalId: {
-		type: Number,
-		required: false,
-		default: null
-	},
-})
-
-const familyForm = ref(null)
-
-const familyData = ref({
-	name: props.name,
-	familyExternalId: props.familyExternalId
-})
+const userName = ref("")
+const userInitializeForm = ref(null)
 
 const confirm = () => {
-	onDialogOK({
-		...familyData.value,
-	})
+	onDialogOK(userName.value)
 }
 </script>
 
@@ -40,36 +21,28 @@ const confirm = () => {
 		ref="dialogRef"
 		@hide="onDialogHide"
 		maximized
+		persistent
 		transition-show="jump-right"
 		transition-hide="none"
 	>
 		<q-card class="q-dialog-plugin q-pa-md">
-			<div class="text-right q-mb-md">
-				<q-icon
-					v-close-popup
-					name="close"
-					size="md"
-					class="cursor-pointer"
-				/>
-			</div>
-
 			<q-card-section class="q-pa-none q-mb-md text-center">
-				<div class="text-h5">Добавить семью</div>
+				<div class="text-h5">Как Вас зовут?</div>
 			</q-card-section>
 
 			<q-form
-				ref="familyForm"
+				ref="userInitializeForm"
 				greedy
 				@submit="confirm"
 			>
 				<q-input
 					filled
 					hide-bottom-space
-					v-model="familyData.name"
-					label="Название"
+					v-model="userName"
+					label="Ваше имя"
 					lazy-rules="ondemand"
 					:rules="[
-						val => !!val,
+						val => val.length > 2 || 'Минимальная длина имени - 2 символа'
 					]"
 				/>
 			</q-form>
@@ -80,7 +53,7 @@ const confirm = () => {
 						label="Продолжить"
 						color="primary"
 						class="q-pa-md full-width text-body1"
-						@click="familyForm?.submit"
+						@click="userInitializeForm?.submit"
 					/>
 				</div>
 			</div>

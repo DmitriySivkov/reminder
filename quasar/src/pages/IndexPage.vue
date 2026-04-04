@@ -6,7 +6,7 @@ import MainHeader from "src/layouts/MainHeader.vue"
 	<MainHeader>
 		<q-toolbar>
 			<q-toolbar-title>
-				Индекс
+				Главная
 			</q-toolbar-title>
 		</q-toolbar>
 	</MainHeader>

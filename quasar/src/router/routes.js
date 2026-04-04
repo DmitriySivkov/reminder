@@ -4,9 +4,24 @@ const routes = [
 		path: "/",
 		component: () => import("layouts/MainLayout.vue"),
 		children: [
-			{ path: "", component: () => import("pages/IndexPage.vue") },
-			{ path: "families", component: () => import("pages/FamiliesPage.vue") },
-			{ path: "families/:family_id", component: () => import("pages/FamiliesDetailPage.vue") }
+			{
+				path: "",
+				component: () => import("pages/IndexPage.vue")
+			},
+			{
+				path: "families",
+				component: () => import("pages/FamiliesPage.vue"),
+				meta: {
+					routeName: "Семья список"
+				}
+			},
+			{
+				path: "families/:family_id",
+				component: () => import("pages/FamiliesDetailPage.vue"),
+				meta: {
+					routeName: "Семья"
+				}
+			}
 		]
 	},
 

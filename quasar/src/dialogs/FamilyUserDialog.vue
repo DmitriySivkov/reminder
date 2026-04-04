@@ -54,8 +54,8 @@ const searchUserByDeviceId = async(query, update) => {
 		ref="dialogRef"
 		@hide="onDialogHide"
 		maximized
-		transition-show="slide-up"
-		transition-hide="slide-down"
+		transition-show="jump-right"
+		transition-hide="none"
 	>
 		<q-card class="q-dialog-plugin q-pa-md">
 			<div class="text-right q-mb-md">
