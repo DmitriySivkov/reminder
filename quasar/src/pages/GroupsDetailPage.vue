@@ -1,6 +1,6 @@
 <script setup>
 import MainHeader from "src/layouts/MainHeader.vue"
-import FamilyUserDialog from "src/dialogs/familyUserDialog.vue"
+import GroupUserDialog from "src/dialogs/GroupUserDialog.vue"
 import { inject, onMounted, ref } from "vue"
 import { Dialog } from "quasar"
 import { api } from "src/boot/axios"
@@ -16,45 +16,45 @@ const userStore = useUserStore()
 
 const route = useRoute()
 
-const family = ref(null)
-const familyUsers = ref([])
+const group = ref(null)
+const groupUsers = ref([])
 
 const { notifyError } = useNotification()
 
 const isLoading = ref(false)
 
-const showFamilyUserDialog = (familyUser) => {
+const showGroupUserDialog = (groupUser) => {
 	Dialog.create({
-		component: FamilyUserDialog,
+		component: GroupUserDialog,
 		componentProps: {
-			familyUser
+			groupUser
 		}
 	}).onOk((user) => {
 		if (user.external_id) {
-			updateFamilyUser(user)
+			updateGroupUser(user)
 		} else {
-			storeFamilyUser(user)
+			storeGroupUser(user)
 		}
 	})
 }
 
-const updateFamilyUser = ({ name, familyUserExternalId }) => {
+const updateGroupUser = ({ name, groupUserExternalId }) => {
 
 }
 
-const storeFamilyUser = (user) => {
+const storeGroupUser = (user) => {
 	isLoading.value = true
 
-	const promise = api.post(`families/${route.params.family_id}/users`, {
+	const promise = api.post(`groups/${route.params.group_id}/users`, {
 		device_id: userStore.deviceId,
 		add_user_device_id: user.device_id
 	})
 
 	promise.then((response) => {
-		storeFamilyUserOnDevice({
+		storeGroupUserOnDevice({
 			external_id: response.data.id,
 			name: response.data.name,
-			// todo - add display name on user add to family form
+			// todo - add display name on user add to group form
 		})
 	})
 
@@ -65,7 +65,7 @@ const storeFamilyUser = (user) => {
 	promise.finally(() => isLoading.value = false)
 }
 
-const storeFamilyUserOnDevice = async (familyUser) => {
+const storeGroupUserOnDevice = async (groupUser) => {
 	const isConn = await sqliteServ?.isConnection(storageServ?.getDatabaseName(), false)
 
 	if (!isConn) {
@@ -73,27 +73,27 @@ const storeFamilyUserOnDevice = async (familyUser) => {
 		console.error(msg)
 	}
 
-	familyUser.id = await storageServ?.add("users", familyUser)
+	groupUser.id = await storageServ?.add("users", groupUser)
 
-	familyUsers.value.push(familyUser)
+	groupUsers.value.push(groupUser)
 }
 
-const getFamily = async () => {
-	const result = await storageServ.db?.query("SELECT * FROM families WHERE id = " + route.params.family_id + ";")
-	family.value = result?.values[0]
+const getGroup = async () => {
+	const result = await storageServ.db?.query("SELECT * FROM groups WHERE id = " + route.params.group_id + ";")
+	group.value = result?.values[0]
 }
 
-const getFamilyUsers = async () => {
+const getGroupUsers = async () => {
 	const result = await storageServ.db?.query(
 		"SELECT * FROM users WHERE EXISTS (" +
-		"SELECT * FROM family_user WHERE users.id = family_user.user_id AND family_user.family_id = " + route.params.family_id + ");"
+		"SELECT * FROM group_user WHERE users.id = group_user.user_id AND group_user.group_id = " + route.params.group_id + ");"
 	)
-	familyUsers.value = result?.values
+	groupUsers.value = result?.values
 }
 
 onMounted(async() => {
-	await getFamily()
-	await getFamilyUsers()
+	await getGroup()
+	await getGroupUsers()
 })
 </script>
 
@@ -101,12 +101,12 @@ onMounted(async() => {
 	<MainHeader>
 		<q-toolbar>
 			<q-toolbar-title>
-				Семья {{ family?.name }}
+				Группа {{ group?.name }}
 			</q-toolbar-title>
 
 			<q-btn
 				flat
-				@click="showFamilyUserDialog(null)"
+				@click="showGroupUserDialog(null)"
 				:loading="isLoading"
 			>
 				<q-icon name="add" />
@@ -121,14 +121,14 @@ onMounted(async() => {
 			class="q-mt-xs"
 		>
 			<q-item
-				v-for="familyUser in familyUsers"
-				:key="familyUser.id"
+				v-for="groupUser in groupUsers"
+				:key="groupUser.id"
 				clickable
 				class="bg-primary text-white q-py-lg q-px-md"
-				@click="showFamilyUserDialog(familyUser)"
+				@click="showGroupUserDialog(groupUser)"
 			>
 				<q-item-section>
-					{{ familyUser.display_name ?? familyUser.name }}
+					{{ groupUser.display_name ?? groupUser.name }}
 				</q-item-section>
 				<q-item-section avatar>
 					<q-icon name="edit" />

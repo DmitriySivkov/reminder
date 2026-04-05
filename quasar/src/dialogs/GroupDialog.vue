@@ -14,23 +14,23 @@ const props = defineProps({
 		required: false,
 		default: null
 	},
-	familyExternalId: {
+	groupExternalId: {
 		type: Number,
 		required: false,
 		default: null
 	},
 })
 
-const familyForm = ref(null)
+const groupForm = ref(null)
 
-const familyData = ref({
+const groupData = ref({
 	name: props.name,
-	familyExternalId: props.familyExternalId
+	groupExternalId: props.groupExternalId
 })
 
 const confirm = () => {
 	onDialogOK({
-		...familyData.value,
+		...groupData.value,
 	})
 }
 </script>
@@ -54,18 +54,18 @@ const confirm = () => {
 			</div>
 
 			<q-card-section class="q-pa-none q-mb-md text-center">
-				<div class="text-h5">Добавить семью</div>
+				<div class="text-h5">Добавить группу</div>
 			</q-card-section>
 
 			<q-form
-				ref="familyForm"
+				ref="groupForm"
 				greedy
 				@submit="confirm"
 			>
 				<q-input
 					filled
 					hide-bottom-space
-					v-model="familyData.name"
+					v-model="groupData.name"
 					label="Название"
 					lazy-rules="ondemand"
 					:rules="[
@@ -80,7 +80,7 @@ const confirm = () => {
 						label="Продолжить"
 						color="primary"
 						class="q-pa-md full-width text-body1"
-						@click="familyForm?.submit"
+						@click="groupForm?.submit"
 					/>
 				</div>
 			</div>

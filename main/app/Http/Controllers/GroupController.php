@@ -3,16 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Family;
+use App\Models\Group;
 use Illuminate\Http\Request;
 
-class FamilyController extends Controller
+class GroupController extends Controller
 {
     public function index(Request $request)
     {
         $deviceId = $request->input('device_id');
 
-        return Family::whereHas('users', function($query) use ($deviceId) {
+        return Group::whereHas('users', function($query) use ($deviceId) {
             $query->where('device_id', $deviceId);
         });
     }
@@ -22,33 +22,33 @@ class FamilyController extends Controller
         $name = $request->input('name');
         $deviceId = $request->input('device_id');
 
-        $family = Family::create([
+        $group = Group::create([
             'name' => $name
         ]);
 
         $addUser = User::where('device_id', $deviceId)->firstOrFail();
 
-        $family->users()->attach($addUser->id);
+        $group->users()->attach($addUser->id);
 
-        return $family;
+        return $group;
     }
 
-    public function update(Request $request, Family $family)
+    public function update(Request $request, Group $group)
     {
         $name = $request->input('name');
 
-        $family->update([
+        $group->update([
             'name' => $name
         ]);
     }
 
-    public function addUser(Request $request, Family $family)
+    public function addUser(Request $request, Group $group)
     {
         $deviceId = $request->input('device_id');
         $addUserDeviceId = $request->input('add_user_device_id');
 
         if (
-            !$family->users()
+            !$group->users()
                 ->where('device_id', $deviceId)
                 ->exists()
         ) {
@@ -57,7 +57,7 @@ class FamilyController extends Controller
 
         $addUser = User::where('device_id', $addUserDeviceId)->firstOrFail();
 
-        $family->users()->attach($addUser->id);
+        $group->users()->attach($addUser->id);
 
         return $addUser;
     }

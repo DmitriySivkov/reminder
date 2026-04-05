@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('family_user', function (Blueprint $table) {
-            $table->unsignedInteger('family_id');
-            $table->unsignedInteger('user_id');
+        Schema::create('groups', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
         });
     }
 
@@ -22,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('family_user');
+        Schema::dropIfExists('groups');
     }
 };

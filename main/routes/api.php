@@ -20,10 +20,10 @@ Route::group(['prefix' => 'users'], function() {
     Route::get('search', [\App\Http\Controllers\UserController::class, 'search']);
 });
 
-Route::group(['prefix' => 'families'], function() {
-    Route::get('', [\App\Http\Controllers\FamilyController::class, 'index']);
-    Route::post('', [\App\Http\Controllers\FamilyController::class, 'store']);
-    Route::put('{family}', [\App\Http\Controllers\FamilyController::class, 'update']);
+Route::group(['prefix' => 'groups'], function() {
+    Route::get('', [\App\Http\Controllers\GroupController::class, 'index']);
+    Route::post('', [\App\Http\Controllers\GroupController::class, 'store']);
+    Route::put('{group}', [\App\Http\Controllers\GroupController::class, 'update']);
 
-    Route::post('{family}/users', [\App\Http\Controllers\FamilyController::class, 'addUser']);
+    Route::post('{group}/users', [\App\Http\Controllers\GroupController::class, 'addUser']);
 });

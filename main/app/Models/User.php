@@ -13,8 +13,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string $device_model
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Family> $families
- * @property-read int|null $families_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Group> $groups
+ * @property-read int|null $groups_count
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
@@ -34,8 +34,8 @@ class User extends Authenticatable
 
     protected $guarded = [];
 
-    public function families()
+    public function groups()
     {
-        return $this->belongsToMany(Family::class);
+        return $this->belongsToMany(Group::class);
     }
 }

@@ -30,6 +30,6 @@ class UserController extends Controller
     {
         $deviceId = $request->input('device_id');
 
-        return User::where('device_id', $deviceId)->get();
+        return User::whereLike(['device_id'], $deviceId)->get();
     }
 }

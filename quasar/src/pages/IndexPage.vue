@@ -20,15 +20,15 @@ import MainHeader from "src/layouts/MainHeader.vue"
 			<q-item
 				clickable
 				class="bg-primary text-white flex-center q-pa-lg"
-				to="families"
+				to="groups"
 			>
-				Семья
+				Группы
 			</q-item>
 
 			<q-item
 				clickable
 				class="bg-primary text-white flex-center q-pa-lg"
-				to="families"
+				to="groups"
 			>
 				Задачи
 			</q-item>

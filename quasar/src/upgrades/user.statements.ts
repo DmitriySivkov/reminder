@@ -9,13 +9,13 @@ export const UserUpgradeStatements = [
              display_name TEXT,
 						 is_device_user INTEGER NOT NULL DEFAULT 0
              );`,
-			`CREATE TABLE IF NOT EXISTS families (
+			`CREATE TABLE IF NOT EXISTS groups (
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              external_id INTEGER NOT NULL,
              name TEXT NOT NULL
              );`,
-			`CREATE TABLE IF NOT EXISTS family_user (
-             family_id INTEGER NOT NULL,
+			`CREATE TABLE IF NOT EXISTS group_user (
+             group_id INTEGER NOT NULL,
              user_id INTEGER NOT NULL
              );`,
 		]

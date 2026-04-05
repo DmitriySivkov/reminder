@@ -10,7 +10,7 @@ defineEmits([
 const { dialogRef, onDialogHide, onDialogOK } = useDialogPluginComponent()
 
 const props = defineProps({
-	familyUser: {
+	groupUser: {
 		type: Object,
 		required: false,
 		default: null
@@ -19,7 +19,7 @@ const props = defineProps({
 
 const isLoading = ref(false)
 
-const familyUserForm = ref(null)
+const groupUserForm = ref(null)
 
 const confirm = () => {
 	onDialogOK({
@@ -27,7 +27,7 @@ const confirm = () => {
 	})
 }
 
-const user = ref(props.familyUser)
+const user = ref(props.groupUser)
 const userOptions = ref([])
 
 const searchUserByDeviceId = async(query, update) => {
@@ -67,13 +67,13 @@ const searchUserByDeviceId = async(query, update) => {
 				/>
 			</div>
 
-			<template v-if="familyUser">
+			<template v-if="groupUser">
 				<q-card-section class="q-pa-none q-mb-md text-center">
-					<div class="text-h5">Добавить пользователя в семью</div>
+					<div class="text-h5">Добавить пользователя в группу</div>
 				</q-card-section>
 
 				<q-form
-					ref="familyUserForm"
+					ref="groupUserForm"
 					greedy
 					@submit="confirm"
 				>
@@ -95,7 +95,7 @@ const searchUserByDeviceId = async(query, update) => {
 							label="Продолжить"
 							color="primary"
 							class="q-pa-md full-width text-body1"
-							@click="familyUserForm?.submit"
+							@click="groupUserForm?.submit"
 						/>
 					</div>
 				</div>

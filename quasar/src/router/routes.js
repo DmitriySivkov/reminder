@@ -9,17 +9,17 @@ const routes = [
 				component: () => import("pages/IndexPage.vue")
 			},
 			{
-				path: "families",
-				component: () => import("pages/FamiliesPage.vue"),
+				path: "groups",
+				component: () => import("pages/GroupsPage.vue"),
 				meta: {
-					routeName: "Семья список"
+					routeName: "Группы"
 				}
 			},
 			{
-				path: "families/:family_id",
-				component: () => import("pages/FamiliesDetailPage.vue"),
+				path: "groups/:group_id",
+				component: () => import("pages/GroupsDetailPage.vue"),
 				meta: {
-					routeName: "Семья"
+					routeName: "Группа"
 				}
 			}
 		]
