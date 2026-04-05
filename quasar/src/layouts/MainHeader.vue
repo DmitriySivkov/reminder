@@ -13,6 +13,14 @@ const route = useRoute()
 				<q-item-label>{{ userStore.name }}</q-item-label>
 			</q-item-section>
 		</q-item>
-		<slot />
+		<slot name="default">
+			<q-toolbar>
+				<q-toolbar-title>
+					{{ route.meta?.routeName }}
+				</q-toolbar-title>
+
+				<slot name="action" />
+			</q-toolbar>
+		</slot>
 	</q-header>
 </template>

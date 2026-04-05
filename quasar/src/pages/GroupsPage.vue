@@ -92,11 +92,7 @@ onMounted(async() => {
 
 <template>
 	<MainHeader>
-		<q-toolbar>
-			<q-toolbar-title>
-				Группа
-			</q-toolbar-title>
-
+		<template #action>
 			<q-btn
 				flat
 				@click="showGroupDialog"
@@ -104,7 +100,7 @@ onMounted(async() => {
 			>
 				<q-icon name="add" />
 			</q-btn>
-		</q-toolbar>
+		</template>
 	</MainHeader>
 
 	<q-page>

@@ -6,7 +6,10 @@ const routes = [
 		children: [
 			{
 				path: "",
-				component: () => import("pages/IndexPage.vue")
+				component: () => import("pages/IndexPage.vue"),
+				meta: {
+					routeName: "Задачи"
+				}
 			},
 			{
 				path: "groups",
