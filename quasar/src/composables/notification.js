@@ -1,27 +1,37 @@
 import { Notify } from "quasar"
 
 export const useNotification = () => {
-	const notifySuccess = (message, isPersistent = false) => {
+	const notifySuccess = (
+		message,
+		timeout = 1500,
+		position = "top-right",
+		isPersistent = false
+	) => {
 		return Notify.create({
-			timeout: isPersistent ? 0 : 1500,
+			timeout: isPersistent ? 0 : timeout,
 			color: "green-4",
 			textColor: "white",
 			multiLine: true,
 			icon: "cloud_done",
-			position: "top-right",
+			position,
 			message,
 			actions: isPersistent ? [{ label: "ok", color: "white" }] : []
 		})
 	}
 
-	const notifyError = (message, isPersistent = false) => {
+	const notifyError = (
+		message,
+		timeout = 1500,
+		position = "top-right",
+		isPersistent = false
+	) => {
 		return Notify.create({
-			timeout: isPersistent ? 0 : 1500,
+			timeout: isPersistent ? 0 : timeout,
 			color: "red-5",
 			textColor: "white",
 			multiline: true,
 			icon: "warning",
-			position: "top-right",
+			position,
 			message,
 			actions: isPersistent ? [{ icon: "close", color: "white" }] : []
 		})

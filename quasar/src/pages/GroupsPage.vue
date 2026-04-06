@@ -48,6 +48,7 @@ const storeGroup = ({ name }) => {
 	promise.then((response) => {
 		storeGroupOnDevice({
 			external_id: response.data.id,
+			uuid: response.data.uuid,
 			name: response.data.name
 		})
 	})
@@ -91,24 +92,35 @@ onMounted(async() => {
 </script>
 
 <template>
-	<MainHeader>
-		<template #action>
-			<q-btn
-				flat
-				@click="showGroupDialog"
-				:loading="isLoading"
-			>
-				<q-icon name="add" />
-			</q-btn>
-		</template>
-	</MainHeader>
+	<MainHeader />
 
 	<q-page>
 		<q-list
 			separator
 			dark
-			class="q-mt-xs"
 		>
+			<q-separator dark />
+			<q-item class="bg-primary text-white q-pa-none">
+				<q-item-section class="items-center">
+					<q-btn
+						flat
+						icon="group_add"
+						class="fit q-py-md"
+						@click="showGroupDialog"
+					/>
+				</q-item-section>
+				<q-separator
+					dark
+					vertical
+				/>
+				<q-item-section class="items-center">
+					<q-btn
+						flat
+						icon="person_add"
+						class="fit q-py-md"
+					/>
+				</q-item-section>
+			</q-item>
 			<q-item
 				v-for="group in groups"
 				:key="group.id"

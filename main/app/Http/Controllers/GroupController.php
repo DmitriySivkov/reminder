@@ -23,6 +23,7 @@ class GroupController extends Controller
         $deviceId = $request->input('device_id');
 
         $group = Group::create([
+            'uuid' => \Str::uuid(),
             'name' => $name
         ]);
 

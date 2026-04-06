@@ -1,9 +1,6 @@
 <script setup>
 import MainHeader from "src/layouts/MainHeader.vue"
-import GroupUserDialog from "src/dialogs/GroupUserDialog.vue"
 import { inject, onMounted, ref } from "vue"
-import { Dialog } from "quasar"
-import { api } from "src/boot/axios"
 import { useRoute } from "vue-router"
 import { useNotification } from "src/composables/notification"
 import { useUserStore } from "src/stores/user"
@@ -19,63 +16,20 @@ const route = useRoute()
 const group = ref(null)
 const groupUsers = ref([])
 
-const { notifyError } = useNotification()
+const { notifySuccess } = useNotification()
 
 const isLoading = ref(false)
 
-const showGroupUserDialog = (groupUser) => {
-	Dialog.create({
-		component: GroupUserDialog,
-		componentProps: {
-			groupUser
-		}
-	}).onOk((user) => {
-		if (user.external_id) {
-			updateGroupUser(user)
-		} else {
-			storeGroupUser(user)
-		}
-	})
-}
+const copyGroupUuid = (groupUuid) => {
+	navigator.clipboard.writeText(groupUuid)
 
-const updateGroupUser = ({ name, groupUserExternalId }) => {
+	groupUuid = groupUuid.slice(0, 7) + "..."
 
-}
-
-const storeGroupUser = (user) => {
-	isLoading.value = true
-
-	const promise = api.post(`groups/${route.params.group_id}/users`, {
-		device_id: userStore.deviceId,
-		add_user_device_id: user.device_id
-	})
-
-	promise.then((response) => {
-		storeGroupUserOnDevice({
-			external_id: response.data.id,
-			name: response.data.name,
-			// todo - add display name on user add to group form
-		})
-	})
-
-	promise.catch(() => {
-		notifyError("Что-то пошло не так")
-	})
-
-	promise.finally(() => isLoading.value = false)
-}
-
-const storeGroupUserOnDevice = async (groupUser) => {
-	const isConn = await sqliteServ?.isConnection(storageServ?.getDatabaseName(), false)
-
-	if (!isConn) {
-		const msg = "Error handleAddUser: No DatabaseConnection"
-		console.error(msg)
-	}
-
-	groupUser.id = await storageServ?.add("users", groupUser)
-
-	groupUsers.value.push(groupUser)
+	notifySuccess(
+		`ID группы ${groupUuid} скопирован - передайте его желаемому пользователю`,
+		5000,
+		"bottom"
+	)
 }
 
 const getGroup = async () => {
@@ -106,10 +60,11 @@ onMounted(async() => {
 
 			<q-btn
 				flat
-				@click="showGroupUserDialog(null)"
+				round
 				:loading="isLoading"
+				@click="copyGroupUuid(group.uuid)"
 			>
-				<q-icon name="add" />
+				<q-icon name="person_add" />
 			</q-btn>
 		</q-toolbar>
 	</MainHeader>
@@ -125,10 +80,9 @@ onMounted(async() => {
 				:key="groupUser.id"
 				clickable
 				class="bg-primary text-white q-py-lg q-px-md"
-				@click="showGroupUserDialog(groupUser)"
 			>
 				<q-item-section>
-					{{ groupUser.display_name ?? groupUser.name }}
+					{{ groupUser.display_name ?? groupUser.name }} {{ groupUser.is_device_user ? '(вы)' : ''}}
 				</q-item-section>
 				<q-item-section avatar>
 					<q-icon name="edit" />

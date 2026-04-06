@@ -6,18 +6,5 @@ import MainHeader from "src/layouts/MainHeader.vue"
 	<MainHeader />
 
 	<q-page>
-		<q-list
-			separator
-			dark
-			class="q-mt-xs"
-		>
-			<q-item
-				clickable
-				class="bg-primary text-white flex-center q-pa-lg"
-				to="groups"
-			>
-				Группы
-			</q-item>
-		</q-list>
 	</q-page>
 </template>

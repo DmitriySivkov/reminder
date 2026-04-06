@@ -12,6 +12,7 @@ export const UserUpgradeStatements = [
 			`CREATE TABLE IF NOT EXISTS groups (
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              external_id INTEGER NOT NULL,
+             uuid TEXT NOT NULL,
              name TEXT NOT NULL
              );`,
 			`CREATE TABLE IF NOT EXISTS group_user (
