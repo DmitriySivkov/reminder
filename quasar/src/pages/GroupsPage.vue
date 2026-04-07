@@ -1,6 +1,7 @@
 <script setup>
 import MainHeader from "src/layouts/MainHeader.vue"
 import GroupDialog from "src/dialogs/GroupDialog.vue"
+import GroupJoinDialog from "src/dialogs/GroupJoinDialog.vue"
 import { inject, onMounted, ref } from "vue"
 import { Dialog } from "quasar"
 import { api } from "src/boot/axios"
@@ -80,6 +81,12 @@ const storeGroupOnDevice = async (group) => {
 	groups.value.push(group)
 }
 
+const showGroupJoinDialog = () => {
+	Dialog.create({
+		component: GroupJoinDialog,
+	})
+}
+
 const getGroups = async () => {
 	const result = await storageServ.db?.query("SELECT * FROM groups;")
 	groups.value = result?.values
@@ -118,8 +125,12 @@ onMounted(async() => {
 						flat
 						icon="person_add"
 						class="fit q-py-md"
+						@click="showGroupJoinDialog"
 					/>
 				</q-item-section>
+				<!-- todo - переделать GroupUserDialog - добавить поле для вставки uuid. Обработка ошибок:
+todo - "вы уже есть в этой группе" и "группы не существует". При успехе тянуть все зависимости и наполнять БД на сервере и телефоне
+todo - сидер групп и группа+юзер-->
 			</q-item>
 			<q-item
 				v-for="group in groups"

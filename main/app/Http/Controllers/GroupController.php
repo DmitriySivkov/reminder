@@ -10,11 +10,8 @@ class GroupController extends Controller
 {
     public function index(Request $request)
     {
-        $deviceId = $request->input('device_id');
-
-        return Group::whereHas('users', function($query) use ($deviceId) {
-            $query->where('device_id', $deviceId);
-        });
+        return Group::filter($request->all())
+            ->get();
     }
 
     public function store(Request $request)
@@ -43,23 +40,12 @@ class GroupController extends Controller
         ]);
     }
 
-    public function addUser(Request $request, Group $group)
+    public function join(Request $request, Group $group, string $deviceId)
     {
-        $deviceId = $request->input('device_id');
-        $addUserDeviceId = $request->input('add_user_device_id');
+        $user = User::where('device_id', $deviceId)->firstOrFail();
 
-        if (
-            !$group->users()
-                ->where('device_id', $deviceId)
-                ->exists()
-        ) {
-            throw new \LogicException('forbidden');
-        }
+        $group->users()->attach($user->id);
 
-        $addUser = User::where('device_id', $addUserDeviceId)->firstOrFail();
-
-        $group->users()->attach($addUser->id);
-
-        return $addUser;
+        return $group->load(['users']);
     }
 }

@@ -16,8 +16,8 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::group(['prefix' => 'users'], function() {
+    Route::get('', [\App\Http\Controllers\UserController::class, 'index']);
 	Route::post('', [\App\Http\Controllers\UserController::class, 'store']);
-    Route::get('search', [\App\Http\Controllers\UserController::class, 'search']);
 });
 
 Route::group(['prefix' => 'groups'], function() {
@@ -25,5 +25,5 @@ Route::group(['prefix' => 'groups'], function() {
     Route::post('', [\App\Http\Controllers\GroupController::class, 'store']);
     Route::put('{group}', [\App\Http\Controllers\GroupController::class, 'update']);
 
-    Route::post('{group}/users', [\App\Http\Controllers\GroupController::class, 'addUser']);
+    Route::post('{group:uuid}/users/{deviceId}', [\App\Http\Controllers\GroupController::class, 'join']);
 });

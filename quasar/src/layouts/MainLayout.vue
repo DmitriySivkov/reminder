@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onBeforeMount, inject } from "vue"
+import { onBeforeMount, inject } from "vue"
 import { useDevice } from "src/composables/device"
 import { useStorage } from "src/composables/storage"
 import { useUserStore } from "src/stores/user"
@@ -13,7 +13,6 @@ const { notifyError } = useNotification()
 
 const storageServ = inject("storageServ")
 const userStore = useUserStore()
-const user = ref(null)
 
 const { getDeviceId, deviceIdKey, getDeviceInfo } = useDevice()
 const { set, has } = useStorage()
@@ -35,15 +34,15 @@ const init = ({ identifier, platform, model }) => {
 				value: identifier
 			})
 
-			const deviceUser = {
+			let deviceUser = {
 				external_id: response.data.id,
 				name: response.data.name ?? response.data.device_id,
 				is_device_user: 1
 			}
 
-			await storageServ?.add("users", deviceUser)
+			deviceUser.id = await storageServ?.add("users", deviceUser)
 
-			userStore.setName(userName)
+			userStore.setUser(deviceUser)
 		})
 
 		promise.catch((error) => {
@@ -55,9 +54,8 @@ const init = ({ identifier, platform, model }) => {
 
 const setUser = async() => {
 	const result = await storageServ.db?.query("SELECT * FROM users WHERE is_device_user = 1;")
-	user.value = result?.values[0]
 
-	userStore.setName(user.value.name)
+	userStore.setUser(result?.values[0])
 }
 
 onBeforeMount(async() => {

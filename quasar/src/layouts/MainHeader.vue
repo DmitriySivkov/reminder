@@ -10,7 +10,7 @@ const route = useRoute()
 	<q-header elevated>
 		<q-item dense>
 			<q-item-section>
-				<q-item-label>{{ userStore.name }}</q-item-label>
+				<q-item-label>{{ userStore.data.name }}</q-item-label>
 			</q-item-section>
 		</q-item>
 		<slot name="default">
