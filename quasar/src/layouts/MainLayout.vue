@@ -21,6 +21,7 @@ const init = ({ identifier, platform, model }) => {
 	Dialog.create({
 		component: UserInitializeDialog,
 	}).onOk((userName) => {
+		// todo - если юзер найден на бэке (по device_id), то не показывать диалог инициализации
 		const promise = api.post("users", {
 			user_name: userName,
 			device_id: userStore.deviceId,

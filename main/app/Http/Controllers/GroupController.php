@@ -40,9 +40,17 @@ class GroupController extends Controller
         ]);
     }
 
-    public function join(Request $request, Group $group, string $deviceId)
+    public function join(Request $request, string $groupUuid, string $deviceId)
     {
         $user = User::where('device_id', $deviceId)->firstOrFail();
+
+        if (!$group = Group::where('uuid', $groupUuid)->first()) {
+            throw new \LogicException('Группа не существует');
+        }
+
+        if ($group->users()->where('id', $user->id)->exists()) {
+            throw new \LogicException('Вы являетесь участником этой группы');
+        }
 
         $group->users()->attach($user->id);
 

@@ -47,6 +47,8 @@ const storeGroup = ({ name }) => {
 	})
 
 	promise.then((response) => {
+		// todo - добавить лоадеры и ошибки как в GroupJoinDialog.
+		// todo - убрать логику в диалог
 		storeGroupOnDevice({
 			external_id: response.data.id,
 			uuid: response.data.uuid,
@@ -84,6 +86,10 @@ const storeGroupOnDevice = async (group) => {
 const showGroupJoinDialog = () => {
 	Dialog.create({
 		component: GroupJoinDialog,
+		componentProps: {
+			sqliteServ,
+			storageServ
+		}
 	})
 }
 
@@ -99,20 +105,14 @@ onMounted(async() => {
 </script>
 
 <template>
-	<MainHeader />
-
-	<q-page>
-		<q-list
-			separator
-			dark
-		>
-			<q-separator dark />
+	<MainHeader >
+		<template #action>
 			<q-item class="bg-primary text-white q-pa-none">
 				<q-item-section class="items-center">
 					<q-btn
 						flat
 						icon="group_add"
-						class="fit q-py-md"
+						class="fit q-py-md q-px-lg"
 						@click="showGroupDialog"
 					/>
 				</q-item-section>
@@ -124,14 +124,20 @@ onMounted(async() => {
 					<q-btn
 						flat
 						icon="person_add"
-						class="fit q-py-md"
+						class="fit q-py-md q-px-lg"
 						@click="showGroupJoinDialog"
 					/>
 				</q-item-section>
-				<!-- todo - переделать GroupUserDialog - добавить поле для вставки uuid. Обработка ошибок:
-todo - "вы уже есть в этой группе" и "группы не существует". При успехе тянуть все зависимости и наполнять БД на сервере и телефоне
-todo - сидер групп и группа+юзер-->
 			</q-item>
+		</template>
+	</MainHeader>
+
+	<q-page>
+		<q-list
+			separator
+			dark
+		>
+			<q-separator dark />
 			<q-item
 				v-for="group in groups"
 				:key="group.id"

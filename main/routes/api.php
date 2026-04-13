@@ -25,5 +25,5 @@ Route::group(['prefix' => 'groups'], function() {
     Route::post('', [\App\Http\Controllers\GroupController::class, 'store']);
     Route::put('{group}', [\App\Http\Controllers\GroupController::class, 'update']);
 
-    Route::post('{group:uuid}/users/{deviceId}', [\App\Http\Controllers\GroupController::class, 'join']);
+    Route::post('{groupUuid}/users/{deviceId}', [\App\Http\Controllers\GroupController::class, 'join']);
 });

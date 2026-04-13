@@ -8,6 +8,7 @@ import { User } from 'src/models/User'
 
 export interface IStorageService {
 	add(table, entity): Promise<number>;
+	addMultiple(table, entity, returnKeys): Promise<any[]>;
 	deleteUserById(id: string): Promise<void>;
 	getDatabaseName(): string;
 	getDatabaseVersion(): number;
@@ -38,7 +39,6 @@ class StorageService implements IStorageService {
 	}
 
 	async add(table, entity): Promise<number> {
-		// add a user to the database
 		const colList = Object.keys(entity).toString();
 		const valArr = Object.values(entity);
 		const valList: string = valArr
@@ -54,6 +54,34 @@ class StorageService implements IStorageService {
 			res.changes.lastId > 0
 		) {
 			return res.changes.lastId;
+		} else {
+			throw new Error('storageService.add: lastId not returned');
+		}
+	}
+
+	async addMultiple(table, entity, returnKeys = []): Promise<any[]> {
+		const colList = Object.keys(entity[0]).toString();
+		let resultList = []
+
+		for (let i in entity) {
+			const valArr = Object.values(entity[i]);
+			const valList: string = valArr
+				.map((value) => (typeof value === 'string' ? `'${value}'` : value))
+				.join(',');
+			resultList.push(`(${valList})`)
+		}
+
+		const returning = returnKeys.length ? 'RETURNING ' + returnKeys.join(',') : ''
+
+		const sql = `INSERT INTO ${table} (${colList}) VALUES ${resultList.join(',')} ${returning}`
+		const res = await this.db?.run(sql, [], true, returnKeys.length ? 'yes' : 'no')
+
+		if (
+			res?.changes !== undefined &&
+			res.changes.lastId !== undefined &&
+			res.changes.lastId > 0
+		) {
+			return res.changes.values;
 		} else {
 			throw new Error('storageService.add: lastId not returned');
 		}

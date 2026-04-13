@@ -25,11 +25,11 @@ const copyGroupUuid = (groupUuid) => {
 
 	groupUuid = groupUuid.slice(0, 7) + "..."
 
-	notifySuccess(
-		`ID группы ${groupUuid} скопирован - передайте его желаемому пользователю`,
-		5000,
-		"bottom"
-	)
+	notifySuccess({
+		message: `ID группы ${groupUuid} скопирован - передайте его желаемому пользователю`,
+		timeout: 5000,
+		position: "bottom"
+	})
 }
 
 const getGroup = async () => {

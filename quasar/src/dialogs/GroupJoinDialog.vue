@@ -3,48 +3,119 @@ import { useDialogPluginComponent } from "quasar"
 import { ref } from "vue"
 import { api } from "src/boot/axios"
 import { useUserStore } from "src/stores/user"
+import { useNotification } from "src/composables/notification"
 
 defineEmits([
 	...useDialogPluginComponent.emits,
 ])
 
+const props = defineProps({
+	sqliteServ: Object,
+	storageServ: Object
+})
+
 const { dialogRef, onDialogHide, onDialogOK } = useDialogPluginComponent()
+
+const { notifyError, notifySuccess } = useNotification()
 
 const userStore = useUserStore()
 
-const groupUserForm = ref(null)
 const groupUuid = ref(null)
 
 const isLoading = ref(false)
+const isSuccessful = ref(null)
 
 const uuidLength = 36
 
-const confirm = () => {
-	onDialogOK()
-}
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
-const groupUuidChanged = (val) => {
+const groupUuidChanged = async(val) => {
 	groupUuid.value = val
 
-	if (groupUuid.value < uuidLength) return
+	if (groupUuid.value.length < uuidLength) return
 
 	isLoading.value = true
 
+	await sleep(1500)
+
 	const promise = api.post(`groups/${groupUuid.value}/users/${userStore.deviceId}`)
 
-	promise.then((response) => {
-		// storeGroupOnDevice({
-		// 	external_id: response.data.id,
-		// 	uuid: response.data.uuid,
-		// 	name: response.data.name
-		// })
+	promise.then(async(response) => {
+		try {
+			await joinGroupOnDevice({
+				group: {
+					external_id: response.data.id,
+					uuid: response.data.uuid,
+					name: response.data.name
+				},
+				users: response.data.users
+			})
+		} catch (error) {
+			isSuccessful.value = false
+
+			notifyError({
+				message: error,
+				timeout: 3000,
+				position: "bottom",
+				classes: "full-width text-center"
+			})
+
+			return
+		}
+
+		isSuccessful.value = true
+
+		notifySuccess({
+			message: `Вы присоединились к группе ${response.data.name}`,
+			timeout: 3000,
+			position: "bottom",
+			classes: "full-width text-center"
+		})
+
+		setTimeout(() => onDialogOK(), 700)
 	})
 
-	promise.catch(() => {
-		// notifyError("Что-то пошло не так")
+	promise.catch((error) => {
+		notifyError({
+			message: error.response.data.message ?? "Что-то пошло не так",
+			timeout: 3000,
+			position: "bottom",
+			classes: "full-width text-center"
+		})
+
+		isSuccessful.value = false
 	})
 
 	promise.finally(() => isLoading.value = false)
+}
+
+const joinGroupOnDevice = async ({ group, users }) => {
+	const isConn = await props.sqliteServ?.isConnection(props.storageServ?.getDatabaseName(), false)
+
+	if (!isConn) {
+		throw new Error("No DatabaseConnection")
+	}
+
+	group.id = await props.storageServ?.add("groups", group)
+
+	users = users.filter((u) => u.id !== userStore.data.id).map((u) => ({
+		external_id: u.id,
+		name: u.name ?? u.device_id,
+	}))
+
+	const result = await props.storageServ?.addMultiple("users", users, ["id"])
+
+	let localUserIds = result.map((u) => u.id)
+
+	await props.storageServ?.addMultiple("group_user", localUserIds.map((uid) => ({
+		group_id: group.id,
+		user_id: uid
+	})))
+}
+
+const clearGroupUuid = () => {
+	groupUuid.value = null
+	isSuccessful.value = null
 }
 </script>
 
@@ -65,16 +136,12 @@ const groupUuidChanged = (val) => {
 					class="cursor-pointer"
 				/>
 			</div>
-
+			<span>2b17c54c-cf73-41bb-af1a-d67b7cb80223</span>
 			<q-card-section class="q-pa-none q-mb-md text-center">
 				<div class="text-h5">Вступить в группу</div>
 			</q-card-section>
 
-			<q-form
-				ref="groupUserForm"
-				greedy
-				@submit="confirm"
-			>
+			<q-form greedy>
 				<q-input
 					filled
 					hide-bottom-space
@@ -82,7 +149,28 @@ const groupUuidChanged = (val) => {
 					:disable="isLoading"
 					label="Введите ID группы"
 					@update:model-value="groupUuidChanged"
-				/>
+				>
+					<template #append>
+						<q-circular-progress
+							v-if="isLoading"
+							indeterminate
+							color="primary"
+						/>
+						<q-icon
+							v-if="isSuccessful === true"
+							name="check_circle"
+							size="31px"
+							color="green"
+						/>
+						<q-icon
+							v-if="isSuccessful === false"
+							name="cancel"
+							size="31px"
+							color="red"
+							@click="clearGroupUuid"
+						/>
+					</template>
+				</q-input>
 			</q-form>
 		</q-card>
 	</q-dialog>
