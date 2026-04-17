@@ -39,14 +39,13 @@ class StorageService implements IStorageService {
 	}
 
 	async add(table, entity): Promise<number> {
-		const colList = Object.keys(entity).toString();
-		const valArr = Object.values(entity);
-		const valList: string = valArr
-			.map((value) => (typeof value === 'string' ? `'${value}'` : value))
-			.join(',');
+		const entityKeys = Object.keys(entity)
+		const colList = entityKeys.toString()
+		const prepareValueList = entityKeys.map(() => "?").join(', ')
+		const valArr = Object.values(entity)
 
-		const sql = `INSERT INTO ${table} (${colList}) VALUES (${valList});`;
-		const res = await this.db?.run(sql, []);
+		const sql = `INSERT INTO ${table} (${colList}) VALUES (${prepareValueList});`
+		const res = await this.db?.run(sql, valArr)
 
 		if (
 			res?.changes !== undefined &&
@@ -59,22 +58,29 @@ class StorageService implements IStorageService {
 		}
 	}
 
-	async addMultiple(table, entity, returnKeys = []): Promise<any[]> {
-		const colList = Object.keys(entity[0]).toString();
-		let resultList = []
-
-		for (let i in entity) {
-			const valArr = Object.values(entity[i]);
-			const valList: string = valArr
-				.map((value) => (typeof value === 'string' ? `'${value}'` : value))
-				.join(',');
-			resultList.push(`(${valList})`)
-		}
-
+	async addMultiple(table, entities, returnKeys = []): Promise<any[]> {
+		const entityKeys = Object.keys(entities[0])
+		const colList = entityKeys.toString();
+		const prepareValueList = entityKeys.map(() => "?").join(', ')
 		const returning = returnKeys.length ? 'RETURNING ' + returnKeys.join(',') : ''
 
-		const sql = `INSERT INTO ${table} (${colList}) VALUES ${resultList.join(',')} ${returning}`
-		const res = await this.db?.run(sql, [], true, returnKeys.length ? 'yes' : 'no')
+		let executeSet = []
+
+		entities.forEach((item, index) => {
+			let executeSetItem = {
+				statement: `INSERT INTO ${table} (${colList}) VALUES (${prepareValueList});`,
+				values: Object.values(entities[index])
+			}
+
+			/** only appending returning value to the last statement to avoid incremental duplication */
+			if (index === entities.length - 1) {
+				executeSetItem.statement = `INSERT INTO ${table} (${colList}) VALUES (${prepareValueList}) ${returning};`
+			}
+
+			executeSet.push(executeSetItem)
+		})
+
+		const res = await this.db?.executeSet(executeSet, true, returnKeys.length ? 'yes' : 'no')
 
 		if (
 			res?.changes !== undefined &&

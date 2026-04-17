@@ -136,7 +136,7 @@ const clearGroupUuid = () => {
 					class="cursor-pointer"
 				/>
 			</div>
-			<span>2b17c54c-cf73-41bb-af1a-d67b7cb80223</span>
+			<span>db77dd32-9545-4aef-83ef-2ee6075dbb34</span>
 			<q-card-section class="q-pa-none q-mb-md text-center">
 				<div class="text-h5">Вступить в группу</div>
 			</q-card-section>
