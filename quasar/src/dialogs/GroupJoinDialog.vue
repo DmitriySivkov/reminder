@@ -41,8 +41,10 @@ const groupUuidChanged = async(val) => {
 	const promise = api.post(`groups/${groupUuid.value}/users/${userStore.deviceId}`)
 
 	promise.then(async(response) => {
+		let newGroup = null
+
 		try {
-			await joinGroupOnDevice({
+			newGroup = await joinGroupOnDevice({
 				group: {
 					external_id: response.data.id,
 					uuid: response.data.uuid,
@@ -72,7 +74,7 @@ const groupUuidChanged = async(val) => {
 			classes: "full-width text-center"
 		})
 
-		setTimeout(() => onDialogOK(), 700)
+		setTimeout(() => onDialogOK(newGroup), 700)
 	})
 
 	promise.catch((error) => {
@@ -98,7 +100,7 @@ const joinGroupOnDevice = async ({ group, users }) => {
 
 	group.id = await props.storageServ?.add("groups", group)
 
-	users = users.filter((u) => u.id !== userStore.data.id).map((u) => ({
+	users = users.filter((u) => u.id !== userStore.data.external_id).map((u) => ({
 		external_id: u.id,
 		name: u.name ?? u.device_id,
 	}))
@@ -111,6 +113,8 @@ const joinGroupOnDevice = async ({ group, users }) => {
 		group_id: group.id,
 		user_id: uid
 	})))
+
+	return group
 }
 
 const clearGroupUuid = () => {

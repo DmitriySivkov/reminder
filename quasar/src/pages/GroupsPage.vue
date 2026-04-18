@@ -90,6 +90,8 @@ const showGroupJoinDialog = () => {
 			sqliteServ,
 			storageServ
 		}
+	}).onOk(async(newGroup) => {
+		groups.value.unshift(newGroup)
 	})
 }
 
