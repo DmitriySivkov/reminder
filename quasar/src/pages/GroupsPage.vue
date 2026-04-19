@@ -107,7 +107,7 @@ onMounted(async() => {
 </script>
 
 <template>
-	<MainHeader >
+	<MainHeader>
 		<template #action>
 			<q-item class="bg-primary text-white q-pa-none">
 				<q-item-section class="items-center">

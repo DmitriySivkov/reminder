@@ -55,17 +55,21 @@ onMounted(async() => {
 	<MainHeader>
 		<q-toolbar>
 			<q-toolbar-title>
-				Группа {{ group?.name }}
+				{{ group?.name }}
 			</q-toolbar-title>
 
-			<q-btn
-				flat
-				round
-				:loading="isLoading"
-				@click="copyGroupUuid(group.uuid)"
-			>
-				<q-icon name="person_add" />
-			</q-btn>
+			<q-item class="bg-primary text-white q-pa-none">
+				<q-item-section class="items-center">
+					<q-btn
+						flat
+						class="fit q-py-md q-px-lg"
+						:loading="isLoading"
+						@click="copyGroupUuid(group.uuid)"
+					>
+						<q-icon name="person_add" />
+					</q-btn>
+				</q-item-section>
+			</q-item>
 		</q-toolbar>
 	</MainHeader>
 

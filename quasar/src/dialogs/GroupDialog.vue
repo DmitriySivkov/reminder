@@ -54,7 +54,7 @@ const confirm = () => {
 			</div>
 
 			<q-card-section class="q-pa-none q-mb-md text-center">
-				<div class="text-h5">Добавить группу</div>
+				<div class="text-h5">Создать группу</div>
 			</q-card-section>
 
 			<q-form
