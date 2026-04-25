@@ -8,7 +8,7 @@ import { User } from 'src/models/User'
 
 export interface IStorageService {
 	add(table, entity): Promise<number>;
-	addMultiple(table, entity, returnKeys): Promise<any[]>;
+	addMultiple(table, entity, returnKeys): Promise<number>;
 	deleteUserById(id: string): Promise<void>;
 	getDatabaseName(): string;
 	getDatabaseVersion(): number;
@@ -58,36 +58,27 @@ class StorageService implements IStorageService {
 		}
 	}
 
-	async addMultiple(table, entities, returnKeys = []): Promise<any[]> {
+	async addMultiple(table, entities): Promise<number> {
 		const entityKeys = Object.keys(entities[0])
 		const colList = entityKeys.toString();
 		const prepareValueList = entityKeys.map(() => "?").join(', ')
-		const returning = returnKeys.length ? 'RETURNING ' + returnKeys.join(',') : ''
 
 		let executeSet = []
-
 		entities.forEach((item, index) => {
-			let executeSetItem = {
+			executeSet.push({
 				statement: `INSERT INTO ${table} (${colList}) VALUES (${prepareValueList});`,
 				values: Object.values(entities[index])
-			}
-
-			/** only appending returning value to the last statement to avoid incremental duplication */
-			if (index === entities.length - 1) {
-				executeSetItem.statement = `INSERT INTO ${table} (${colList}) VALUES (${prepareValueList}) ${returning};`
-			}
-
-			executeSet.push(executeSetItem)
+			})
 		})
 
-		const res = await this.db?.executeSet(executeSet, true, returnKeys.length ? 'yes' : 'no')
+		const res = await this.db?.executeSet(executeSet)
 
 		if (
 			res?.changes !== undefined &&
 			res.changes.lastId !== undefined &&
 			res.changes.lastId > 0
 		) {
-			return res.changes.values;
+			return res.changes.lastId;
 		} else {
 			throw new Error('storageService.add: lastId not returned');
 		}

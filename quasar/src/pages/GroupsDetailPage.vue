@@ -7,7 +7,6 @@ import { useUserStore } from "src/stores/user"
 
 const sqliteServ = inject("sqliteServ")
 const storageServ = inject("storageServ")
-const db = ref(null)
 
 const userStore = useUserStore()
 
@@ -37,8 +36,7 @@ const getGroup = async () => {
 
 const getGroupUsers = async () => {
 	const result = await storageServ.db?.query(
-		"SELECT * FROM users WHERE EXISTS (" +
-		"SELECT * FROM group_user WHERE users.id = group_user.user_id AND group_user.group_id = " + route.params.group_id + ");"
+		`SELECT * FROM users WHERE EXISTS (SELECT 1 FROM group_user WHERE users.id = group_user.user_id AND group_user.group_id = ${route.params.group_id});`
 	)
 	groupUsers.value = result?.values
 }
@@ -60,11 +58,9 @@ onMounted(async() => {
 				<q-item-section class="items-center">
 					<q-btn
 						flat
-						class="fit q-py-md q-px-lg"
+						icon="person_add"
 						@click="copyGroupUuid(group.uuid)"
-					>
-						<q-icon name="person_add" />
-					</q-btn>
+					/>
 				</q-item-section>
 			</q-item>
 		</q-toolbar>

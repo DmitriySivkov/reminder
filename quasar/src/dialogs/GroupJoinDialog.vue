@@ -92,26 +92,28 @@ const groupUuidChanged = async(val) => {
 }
 
 const joinGroupOnDevice = async ({ group, users }) => {
-	const isConn = await props.sqliteServ?.isConnection(props.storageServ?.getDatabaseName(), false)
+	const isConn = await props.sqliteServ?.isConnection(props.storageServ.getDatabaseName(), false)
 
 	if (!isConn) {
 		throw new Error("No DatabaseConnection")
 	}
 
-	group.id = await props.storageServ?.add("groups", group)
+	group.id = await props.storageServ.add("groups", group)
 
 	users = users.filter((u) => u.id !== userStore.data.external_id).map((u) => ({
 		external_id: u.id,
 		name: u.name ?? u.device_id,
 	}))
 
-	const result = await props.storageServ?.addMultiple("users", users, ["id"])
+	await props.storageServ.addMultiple("users", users)
 
-	let localUserIds = result.map((u) => u.id)
+	const localUserIds = await props.storageServ.db?.query(
+		`SELECT id FROM users WHERE external_id IN (${users.map((u) => u.external_id).join(", ")});`
+	)
 
-	await props.storageServ?.addMultiple("group_user", localUserIds.map((uid) => ({
+	await props.storageServ.addMultiple("group_user", localUserIds.values.map((u) => ({
 		group_id: group.id,
-		user_id: uid
+		user_id: u.id
 	})))
 
 	return group
@@ -142,6 +144,7 @@ const clearGroupUuid = () => {
 			</div>
 			<q-card-section class="q-pa-none q-mb-md text-center">
 				<div class="text-h5">Стать участником группы</div>
+				f33619a0-3311-4eee-90c5-5e82c974fa73
 			</q-card-section>
 
 			<q-form greedy>

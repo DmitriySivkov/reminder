@@ -27,3 +27,7 @@ Route::group(['prefix' => 'groups'], function() {
 
     Route::post('{groupUuid}/users/{deviceId}', [\App\Http\Controllers\GroupController::class, 'join']);
 });
+
+Route::group(['prefix' => 'tasks'], function() {
+    Route::post('', [\App\Http\Controllers\TaskController::class, 'store']);
+});

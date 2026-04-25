@@ -114,7 +114,6 @@ onMounted(async() => {
 					<q-btn
 						flat
 						icon="group_add"
-						class="fit q-py-md q-px-lg"
 						@click="showGroupDialog"
 					/>
 				</q-item-section>
@@ -126,7 +125,6 @@ onMounted(async() => {
 					<q-btn
 						flat
 						icon="person_add"
-						class="fit q-py-md q-px-lg"
 						@click="showGroupJoinDialog"
 					/>
 				</q-item-section>

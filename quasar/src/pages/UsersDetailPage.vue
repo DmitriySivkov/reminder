@@ -7,7 +7,6 @@ import { useUserStore } from "src/stores/user"
 
 const sqliteServ = inject("sqliteServ")
 const storageServ = inject("storageServ")
-const db = ref(null)
 
 const userStore = useUserStore()
 
