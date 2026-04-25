@@ -6,6 +6,7 @@ const routes = [
 		children: [
 			{
 				path: "",
+				name: "home",
 				component: () => import("pages/IndexPage.vue"),
 				meta: {
 					routeName: "Задачи"
@@ -13,6 +14,7 @@ const routes = [
 			},
 			{
 				path: "groups",
+				name: "groups",
 				component: () => import("pages/GroupsPage.vue"),
 				meta: {
 					routeName: "Группы"
@@ -20,9 +22,18 @@ const routes = [
 			},
 			{
 				path: "groups/:group_id",
+				name: "groups_detail",
 				component: () => import("pages/GroupsDetailPage.vue"),
 				meta: {
 					routeName: "Группа"
+				}
+			},
+			{
+				path: "groups/:group_id/users/:user_id",
+				name: "groups_users_detail",
+				component: () => import("pages/UsersDetailPage.vue"),
+				meta: {
+					routeName: "Пользователь"
 				}
 			}
 		]

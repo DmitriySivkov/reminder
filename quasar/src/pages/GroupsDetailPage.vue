@@ -18,8 +18,6 @@ const groupUsers = ref([])
 
 const { notifySuccess } = useNotification()
 
-const isLoading = ref(false)
-
 const copyGroupUuid = (groupUuid) => {
 	navigator.clipboard.writeText(groupUuid)
 
@@ -63,7 +61,6 @@ onMounted(async() => {
 					<q-btn
 						flat
 						class="fit q-py-md q-px-lg"
-						:loading="isLoading"
 						@click="copyGroupUuid(group.uuid)"
 					>
 						<q-icon name="person_add" />
@@ -84,12 +81,19 @@ onMounted(async() => {
 				:key="groupUser.id"
 				clickable
 				class="bg-primary text-white q-py-lg q-px-md"
+				:to="{
+					name: 'groups_users_detail',
+					params: {
+						group_id: group.id,
+						user_id: groupUser.id
+					}
+				}"
 			>
 				<q-item-section>
 					{{ groupUser.display_name ?? groupUser.name }} {{ groupUser.is_device_user ? '(вы)' : ''}}
 				</q-item-section>
 				<q-item-section avatar>
-					<q-icon name="edit" />
+					<q-icon name="assignment" />
 				</q-item-section>
 			</q-item>
 		</q-list>
