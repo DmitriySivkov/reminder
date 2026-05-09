@@ -21,12 +21,11 @@ export const UserUpgradeStatements = [
              );`,
 			`CREATE TABLE IF NOT EXISTS tasks (
 							id INTEGER PRIMARY KEY AUTOINCREMENT,
-							external_id INTEGER NOT NULL,
+							external_id INTEGER,
 							group_id INTEGER NOT NULL,
 							user_id INTEGER NOT NULL,
 							headline VARCHAR(255) NOT NULL,
-							text VARCHAR(65535) NOT NULL,
-							is_sent INTEGER NOT NULL DEFAULT 0
+							text VARCHAR(65535) NOT NULL
              );`,
 		]
 	},

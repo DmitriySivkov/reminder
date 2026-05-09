@@ -4,6 +4,7 @@ export const useUserStore = defineStore("user", {
 	state: () => ({
 		data: {},
 		deviceId: null,
+		isConnected: false,
 	}),
 
 	actions: {
@@ -13,5 +14,8 @@ export const useUserStore = defineStore("user", {
 		setDeviceId(deviceId) {
 			this.deviceId = deviceId
 		},
+		setIsConnected(isConnected) {
+			this.isConnected = isConnected
+		}
 	}
 })

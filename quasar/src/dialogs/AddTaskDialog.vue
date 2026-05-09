@@ -55,6 +55,47 @@ const getGroupUsers = async () => {
 const addTask = async() => {
 	isLoading.value = true
 
+	if (!userStore.isConnected) {
+		let newTask = null
+
+		try {
+			newTask = await addTaskOnDevice({
+				external_id: null,
+				group_id: selectedGroup.value.id,
+				user_id: selectedUser.value.id,
+				headline: taskHeadline.value,
+				text: taskText.value
+			})
+		} catch (error) {
+			isSuccessful.value = false
+
+			notifyError({
+				message: error,
+				timeout: 3000,
+				position: "bottom",
+				classes: "full-width text-center"
+			})
+
+			return
+		}
+
+		isSuccessful.value = true
+
+		notifySuccess({
+			message: `Добавлено новое задание для пользователя ${selectedUser.value.display_name ?? selectedUser.value.name}`,
+			timeout: 3000,
+			position: "bottom",
+			classes: "full-width text-center"
+		})
+
+		setTimeout(() => {
+			isLoading.value = false
+			onDialogOK(newTask)
+		}, 700)
+
+		return
+	}
+
 	const promise = api.post("tasks", {
 		user_id: selectedUser.value.external_id,
 		owner_id: userStore.data.external_id,
@@ -62,7 +103,7 @@ const addTask = async() => {
 		headline: taskHeadline.value,
 		text: taskText.value,
 	})
-
+	// todo - owner_id - добавить к таске чтобы видеть от кого задача
 	promise.then(async(response) => {
 		let newTask = null
 
@@ -70,7 +111,7 @@ const addTask = async() => {
 			newTask = await addTaskOnDevice({
 				external_id: response.data,
 				group_id: selectedGroup.value.id,
-				user_id: selectedUser.value.external_id,
+				user_id: selectedUser.value.id,
 				headline: taskHeadline.value,
 				text: taskText.value
 			})
@@ -122,7 +163,21 @@ const addTaskOnDevice = async (task) => {
 
 	task.id = await props.storageServ?.add("tasks", task)
 
-	return task
+	const sql = "" +
+		"SELECT tasks.*, " +
+		"groups.name as group_name, " +
+		"users.name as user_name, " +
+		"users.display_name as user_display_name, " +
+		"users.is_device_user as is_device_user " +
+		"FROM tasks " +
+		"LEFT JOIN groups ON groups.id = tasks.group_id " +
+		"LEFT JOIN users ON users.id = tasks.user_id " +
+		`WHERE tasks.id=${task.id}` +
+		";"
+
+	const result = await props.storageServ.db?.query(sql)
+
+	return result?.values[0]
 }
 </script>
 

@@ -10,7 +10,20 @@ const route = useRoute()
 	<q-header elevated>
 		<q-item dense>
 			<q-item-section>
-				<q-item-label>{{ userStore.data.name }}</q-item-label>
+				<q-item-label>
+					<q-badge
+						:label="userStore.data.name"
+						:class="userStore.isConnected ? 'bg-teal' : 'bg-brown'"
+					/>
+				</q-item-label>
+			</q-item-section>
+			<q-item-section side>
+				<q-item-label caption>
+					<q-badge
+						:label="userStore.isConnected ? 'есть соединение с интернетом' : 'без соединения с интернетом'"
+						:class="userStore.isConnected ? 'bg-teal' : 'bg-brown'"
+					/>
+				</q-item-label>
 			</q-item-section>
 		</q-item>
 		<slot name="default">

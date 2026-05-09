@@ -123,6 +123,7 @@ const clearGroupUuid = () => {
 	groupUuid.value = null
 	isSuccessful.value = null
 }
+// todo - запрещать вступать в группу без соединения с интернетом
 </script>
 
 <template>
@@ -144,7 +145,7 @@ const clearGroupUuid = () => {
 			</div>
 			<q-card-section class="q-pa-none q-mb-md text-center">
 				<div class="text-h5">Стать участником группы</div>
-				f33619a0-3311-4eee-90c5-5e82c974fa73
+				2b17c54c-cf73-41bb-af1a-d67b7cb80223
 			</q-card-section>
 
 			<q-form greedy>

@@ -30,4 +30,5 @@ Route::group(['prefix' => 'groups'], function() {
 
 Route::group(['prefix' => 'tasks'], function() {
     Route::post('', [\App\Http\Controllers\TaskController::class, 'store']);
+    Route::post('sync', [\App\Http\Controllers\TaskController::class, 'sync']);
 });

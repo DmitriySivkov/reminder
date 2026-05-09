@@ -70,8 +70,8 @@ onMounted(async() => {
 		<q-list
 			separator
 			dark
-			class="q-mt-xs"
 		>
+			<q-separator dark />
 			<q-item
 				v-for="groupUser in groupUsers"
 				:key="groupUser.id"
