@@ -1,8 +1,8 @@
 {
-  "token_hmac_secret_key": "e44285ed-0b77-49fc-bf07-be824f8d759b",
-  "admin_password": "1ad1bcd5-2d3a-411f-a625-d9807b7b57ce",
-  "admin_secret": "e9280437-b11c-4d91-b3fe-e68f964a395a",
-  "api_key": "1ad9734e-e85c-47af-90a9-71a2e7232eff",
-  "allowed_origins": ["*"],
+  "token_hmac_secret_key": "cec03931-0a45-4d9b-83e9-14d9c4666419",
+  "admin_password": "6826c02b-5d4c-4039-90e4-71a51a0d74f8",
+  "admin_secret": "3d4d4a5b-3fd2-4167-b1ed-53c9af9d93c0",
+  "api_key": "51a58ac5-783a-4098-b1b2-9f054e5fe8a6",
+	"allowed_origins": ["*"],
 	"allow_anonymous_connect_without_token": true
 }

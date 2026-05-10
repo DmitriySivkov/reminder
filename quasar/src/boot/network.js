@@ -6,6 +6,7 @@ export default async ({ store }) => {
 
 	const promise = Network.getStatus()
 
+	// todo - проверить что при инициализации приложения отрабатывает. Сейчас не отрабатывает
 	promise.then(({ connected }) => {
 		userStore.setIsConnected(connected)
 	})

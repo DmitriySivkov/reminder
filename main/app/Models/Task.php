@@ -13,6 +13,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $text
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Group|null $group
+ * @property-read \App\Models\User|null $owner
+ * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task query()
@@ -32,16 +35,16 @@ class Task extends Model
 
     public function user()
     {
-        $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function group()
     {
-        $this->belongsTo(Group::class);
+        return $this->belongsTo(Group::class);
     }
 
     public function owner()
     {
-        $this->belongsTo(User::class, 'owner_id');
+        return $this->belongsTo(User::class, 'owner_id');
     }
 }

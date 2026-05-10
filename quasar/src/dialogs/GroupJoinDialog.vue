@@ -100,12 +100,13 @@ const joinGroupOnDevice = async ({ group, users }) => {
 
 	group.id = await props.storageServ.add("groups", group)
 
-	users = users.filter((u) => u.id !== userStore.data.external_id).map((u) => ({
+	users = users.map((u) => ({
 		external_id: u.id,
 		name: u.name ?? u.device_id,
 	}))
 
-	await props.storageServ.addMultiple("users", users)
+	// filtering out the device user as they already exist from the start
+	await props.storageServ.addMultiple("users", users.filter((u) => u.external_id !== userStore.data.external_id))
 
 	const localUserIds = await props.storageServ.db?.query(
 		`SELECT id FROM users WHERE external_id IN (${users.map((u) => u.external_id).join(", ")});`

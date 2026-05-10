@@ -92,6 +92,7 @@ const showGroupJoinDialog = () => {
 		}
 	}).onOk(async(newGroup) => {
 		groups.value.unshift(newGroup)
+		// todo - subscribe on events
 	})
 }
 
