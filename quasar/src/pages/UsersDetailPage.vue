@@ -27,7 +27,7 @@ const getGroup = async () => {
 const getGroupUser = async () => {
 	const result = await storageServ.db?.query(
 		`SELECT * FROM users WHERE id=${route.params.user_id} AND EXISTS (
-    	SELECT * FROM group_user WHERE group_id=${route.params.group_id}
+    	SELECT 1 FROM group_user WHERE group_id=${route.params.group_id}
     );`
 	)
 

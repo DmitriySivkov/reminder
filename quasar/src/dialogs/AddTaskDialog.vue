@@ -46,7 +46,7 @@ const selectGroup = async(val) => {
 const getGroupUsers = async () => {
 	const result = await props.storageServ.db?.query(
 		"SELECT * FROM users WHERE EXISTS (" +
-		"SELECT * FROM group_user WHERE users.id = group_user.user_id AND group_user.group_id = " + selectedGroup.value.id + ");"
+		"SELECT 1 FROM group_user WHERE users.id = group_user.user_id AND group_user.group_id = " + selectedGroup.value.id + ");"
 	)
 
 	groupUsers.value = result?.values

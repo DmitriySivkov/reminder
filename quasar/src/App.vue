@@ -38,7 +38,7 @@ const initSockets = () => {
 			const userGroups = userGroupsQuery.values ?? []
 
 			for (let i in userGroups) {
-				socketUserGroups.makeSubscription(centrifugo.value, userGroups[i].uuid).subscribe()
+				socketUserGroups.makeSubscription(centrifugo.value, storageServ, userGroups[i].uuid).subscribe()
 			}
 		})
 

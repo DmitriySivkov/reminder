@@ -55,6 +55,41 @@ onMounted(async() => {
 	// todo - синхронизация тасков (параметр is_sent)
 	await getGroups()
 	await getTasks()
+
+	// const sql = "" +
+	// 	"SELECT tasks.*, " +
+	// 	"groups.external_id as group_external_id, " +
+	// 	"users.external_id as user_external_id " +
+	// 	"FROM tasks " +
+	// 	"LEFT JOIN groups ON groups.id = tasks.group_id " +
+	// 	"LEFT JOIN users ON users.id = tasks.user_id " +
+	// 	"WHERE tasks.external_id IS NULL" +
+	// 	";"
+	//
+	// const sqlitePromise = storageServ.db?.query(sql)
+	//
+	// sqlitePromise.then((sqliteResponse) => {
+	// 	if (sqliteResponse.values.length) {
+	// 		const promise = api.post("tasks/sync", {
+	// 			tasks: sqliteResponse.values.map((t) => ({
+	// 				user_id: t.user_external_id,
+	// 				owner_id: userStore.data.external_id,
+	// 				group_id: t.group_external_id,
+	// 				headline: t.headline,
+	// 				text: t.text,
+	// 			}))
+	// 		})
+	//
+	// 		promise.catch((error) => {
+	// 			notifyError({
+	// 				message: error.response.data.message ?? "Не удалось назначить задачи",
+	// 				timeout: 3000,
+	// 				position: "bottom",
+	// 				classes: "full-width text-center"
+	// 			})
+	// 		})
+	// 	}
+	// })
 })
 
 watch(() => userStore.isConnected, (isConnected) => {

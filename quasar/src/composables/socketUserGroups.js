@@ -7,7 +7,7 @@ export const useSocketUserGroups = () => {
 
 	const { getSubscriptionToken } = useSockets()
 
-	const makeSubscription = (centrifugo, groupUuid) => {
+	const makeSubscription = (centrifugo, storageServ, groupUuid) => {
 		const channel = `users.${userStore.deviceId}.groups.${groupUuid}`
 
 		centrifugo
@@ -17,7 +17,7 @@ export const useSocketUserGroups = () => {
 			.on("publication", (ctx) => {
 				try {
 					if (ctx.data.event === "task.created") {
-						console.log(ctx.data)
+						syncTask(storageServ, ctx.data.model)
 					}
 				} catch (error) {
 					consola.error(error)
@@ -32,4 +32,30 @@ export const useSocketUserGroups = () => {
 	}
 
 	return { makeSubscription, getSubscription }
+}
+
+const syncTask = async(storageServ, externalTask) => {
+	const groupResult = await storageServ.db?.query(`SELECT * FROM groups WHERE uuid='${externalTask.group.uuid}';`)
+	const userResult = await storageServ.db?.query(`SELECT * FROM users WHERE external_id=${externalTask.user.id};`)
+
+	const group = groupResult?.values[0]
+	const user = userResult?.values[0]
+
+	const daviceTaskResult = await storageServ.db?.query(
+		`SELECT * FROM tasks WHERE external_id IS NULL AND group_id=${group.id} AND user_id=${user.id};`
+	)
+
+	const deviceTask = daviceTaskResult?.values[0]
+
+	if (deviceTask) {
+		await storageServ.db?.query(`UPDATE tasks SET external_id=${externalTask.id} WHERE id=${deviceTask.id};`)
+	} else {
+		await storageServ?.add("tasks", {
+			external_id: externalTask.id,
+			group_id: group.id,
+			user_id: user.id,
+			headline: externalTask.headline,
+			text: externalTask.text
+		})
+	}
 }
