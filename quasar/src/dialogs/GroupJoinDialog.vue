@@ -92,12 +92,6 @@ const groupUuidChanged = async(val) => {
 }
 
 const joinGroupOnDevice = async ({ group, users }) => {
-	const isConn = await props.sqliteServ?.isConnection(props.storageServ.getDatabaseName(), false)
-
-	if (!isConn) {
-		throw new Error("No DatabaseConnection")
-	}
-
 	group.id = await props.storageServ.add("groups", group)
 
 	users = users.map((u) => ({
@@ -146,7 +140,6 @@ const clearGroupUuid = () => {
 			</div>
 			<q-card-section class="q-pa-none q-mb-md text-center">
 				<div class="text-h5">Стать участником группы</div>
-				2b17c54c-cf73-41bb-af1a-d67b7cb80223
 			</q-card-section>
 
 			<q-form greedy>

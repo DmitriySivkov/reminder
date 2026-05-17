@@ -155,12 +155,6 @@ const addTask = async() => {
 }
 
 const addTaskOnDevice = async (task) => {
-	const isConn = await props.sqliteServ?.isConnection(props.storageServ?.getDatabaseName(), false)
-
-	if (!isConn) {
-		throw new Error("No DatabaseConnection")
-	}
-
 	task.id = await props.storageServ?.add("tasks", task)
 
 	const sql = "" +

@@ -1,20 +1,25 @@
 <script setup>
 import MainHeader from "src/layouts/MainHeader.vue"
 import { Dialog } from "quasar"
-import { inject, ref, onMounted, watch } from "vue"
+import { inject, computed, watch } from "vue"
 import AddTaskDialog from "src/dialogs/AddTaskDialog.vue"
 import { api } from "src/boot/axios"
 import { useUserStore } from "src/stores/user"
 import { useNotification } from "src/composables/notification"
+import { useTaskStore } from "src/stores/task"
+import { useGroupStore } from "src/stores/group"
 
 const sqliteServ = inject("sqliteServ")
 const storageServ = inject("storageServ")
 
 const userStore = useUserStore()
-const { notifyError, notifySuccess } = useNotification()
+const taskStore = useTaskStore()
+const groupStore = useGroupStore()
 
-const groups = ref([])
-const tasks = ref([])
+const { notifyError } = useNotification()
+
+const groups = computed(() => groupStore.data)
+const tasks = computed(() => taskStore.data)
 
 const showAddTaskDialog = () => {
 	Dialog.create({
@@ -22,75 +27,12 @@ const showAddTaskDialog = () => {
 		componentProps: {
 			sqliteServ,
 			storageServ,
-			groups: groups.value
+			groups: groupStore.data
 		}
 	}).onOk((newTask) => {
-		tasks.value.unshift(newTask)
+		taskStore.addTask(newTask)
 	})
 }
-
-const getGroups = async () => {
-	const result = await storageServ.db?.query("SELECT * FROM groups;")
-	groups.value = result?.values
-}
-
-const getTasks = async () => {
-	const sql = "" +
-		"SELECT tasks.*, " +
-		"groups.name as group_name, " +
-		"users.name as user_name, " +
-		"users.display_name as user_display_name, " +
-		"users.is_device_user as is_device_user " +
-		"FROM tasks " +
-		"LEFT JOIN groups ON groups.id = tasks.group_id " +
-		"LEFT JOIN users ON users.id = tasks.user_id " +
-		"ORDER BY tasks.id DESC" +
-		";"
-
-	const result = await storageServ.db?.query(sql)
-	tasks.value = result?.values
-}
-
-onMounted(async() => {
-	// todo - синхронизация тасков (параметр is_sent)
-	await getGroups()
-	await getTasks()
-
-	// const sql = "" +
-	// 	"SELECT tasks.*, " +
-	// 	"groups.external_id as group_external_id, " +
-	// 	"users.external_id as user_external_id " +
-	// 	"FROM tasks " +
-	// 	"LEFT JOIN groups ON groups.id = tasks.group_id " +
-	// 	"LEFT JOIN users ON users.id = tasks.user_id " +
-	// 	"WHERE tasks.external_id IS NULL" +
-	// 	";"
-	//
-	// const sqlitePromise = storageServ.db?.query(sql)
-	//
-	// sqlitePromise.then((sqliteResponse) => {
-	// 	if (sqliteResponse.values.length) {
-	// 		const promise = api.post("tasks/sync", {
-	// 			tasks: sqliteResponse.values.map((t) => ({
-	// 				user_id: t.user_external_id,
-	// 				owner_id: userStore.data.external_id,
-	// 				group_id: t.group_external_id,
-	// 				headline: t.headline,
-	// 				text: t.text,
-	// 			}))
-	// 		})
-	//
-	// 		promise.catch((error) => {
-	// 			notifyError({
-	// 				message: error.response.data.message ?? "Не удалось назначить задачи",
-	// 				timeout: 3000,
-	// 				position: "bottom",
-	// 				classes: "full-width text-center"
-	// 			})
-	// 		})
-	// 	}
-	// })
-})
 
 watch(() => userStore.isConnected, (isConnected) => {
 	if (!isConnected) return

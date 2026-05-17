@@ -2,17 +2,20 @@
 import MainHeader from "src/layouts/MainHeader.vue"
 import GroupDialog from "src/dialogs/GroupDialog.vue"
 import GroupJoinDialog from "src/dialogs/GroupJoinDialog.vue"
-import { inject, onMounted, ref } from "vue"
+import { inject, computed, ref } from "vue"
 import { Dialog } from "quasar"
 import { api } from "src/boot/axios"
 import { useNotification } from "src/composables/notification"
 import { useUserStore } from "src/stores/user"
+import { useGroupStore } from "src/stores/group"
 
 const sqliteServ = inject("sqliteServ")
 const storageServ = inject("storageServ")
-const userStore = useUserStore()
 
-const groups = ref([])
+const userStore = useUserStore()
+const groupStore = useGroupStore()
+
+const groups = computed(() => groupStore.data)
 
 const { notifyError } = useNotification()
 
@@ -64,13 +67,6 @@ const storeGroup = ({ name }) => {
 }
 
 const storeGroupOnDevice = async (group) => {
-	const isConn = await sqliteServ?.isConnection(storageServ?.getDatabaseName(), false)
-
-	if (!isConn) {
-		const msg = "Error handleAddUser: No DatabaseConnection"
-		console.error(msg)
-	}
-
 	group.id = await storageServ?.add("groups", group)
 
 	const result = await storageServ.db?.query("SELECT * FROM users WHERE is_device_user = 1;")
@@ -80,7 +76,7 @@ const storeGroupOnDevice = async (group) => {
 		user_id: result?.values[0].id
 	})
 
-	groups.value.push(group)
+	groupStore.addGroup(group)
 }
 
 const showGroupJoinDialog = () => {
@@ -90,21 +86,11 @@ const showGroupJoinDialog = () => {
 			sqliteServ,
 			storageServ
 		}
-	}).onOk(async(newGroup) => {
-		groups.value.unshift(newGroup)
+	}).onOk((newGroup) => {
+		groupStore.addGroup(newGroup)
 		// todo - subscribe on events
 	})
 }
-
-const getGroups = async () => {
-	const result = await storageServ.db?.query("SELECT * FROM groups;")
-	groups.value = result?.values
-}
-
-onMounted(async() => {
-	// todo - try to avoid blinking cause of db query on mount
-	await getGroups()
-})
 </script>
 
 <template>
