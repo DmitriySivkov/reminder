@@ -34,43 +34,34 @@ const showAddTaskDialog = () => {
 	})
 }
 
+// todo - потестить синхронизацию после деплоя на сервер. При локальной разработке из-за перезагрузки не ясно верно ли работает.
+//  todo - если переместить в onMounted, то работает верно
+//  todo - (вероятно из-за того, что ивент приходит раньше чем загружается приложение)
 watch(() => userStore.isConnected, (isConnected) => {
 	if (!isConnected) return
 
-	const sql = "" +
-		"SELECT tasks.*, " +
-		"groups.external_id as group_external_id, " +
-		"users.external_id as user_external_id " +
-		"FROM tasks " +
-		"LEFT JOIN groups ON groups.id = tasks.group_id " +
-		"LEFT JOIN users ON users.id = tasks.user_id " +
-		"WHERE tasks.external_id IS NULL" +
-		";"
+	const unsyncTasks = tasks.value.filter((t) => !t.external_id)
 
-	const sqlitePromise = storageServ.db?.query(sql)
+	if (unsyncTasks.length) {
+		const promise = api.post("tasks/sync", {
+			tasks: unsyncTasks.map((t) => ({
+				user_id: t.user_external_id ?? "userId",
+				owner_id: userStore.data.external_id,
+				group_id: t.group_external_id ?? "groupId",
+				headline: t.headline,
+				text: t.text,
+			}))
+		})
 
-	sqlitePromise.then((sqliteResponse) => {
-		if (sqliteResponse.values.length) {
-			const promise = api.post("tasks/sync", {
-				tasks: sqliteResponse.values.map((t) => ({
-					user_id: t.user_external_id,
-					owner_id: userStore.data.external_id,
-					group_id: t.group_external_id,
-					headline: t.headline,
-					text: t.text,
-				}))
+		promise.catch((error) => {
+			notifyError({
+				message: error.response.data.message ?? "Не удалось назначить задачи",
+				timeout: 3000,
+				position: "bottom",
+				classes: "full-width text-center"
 			})
-
-			promise.catch((error) => {
-				notifyError({
-					message: error.response.data.message ?? "Не удалось назначить задачи",
-					timeout: 3000,
-					position: "bottom",
-					classes: "full-width text-center"
-				})
-			})
-		}
-	})
+		})
+	}
 })
 </script>
 

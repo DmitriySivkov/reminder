@@ -24,6 +24,7 @@ export const UserUpgradeStatements = [
 							external_id INTEGER,
 							group_id INTEGER NOT NULL,
 							user_id INTEGER NOT NULL,
+							owner_id INTEGER NOT NULL,
 							headline VARCHAR(255) NOT NULL,
 							text VARCHAR(65535) NOT NULL
              );`,

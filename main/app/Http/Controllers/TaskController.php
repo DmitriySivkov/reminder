@@ -22,6 +22,5 @@ class TaskController extends Controller
         foreach ($tasks as $task) {
             Task::create($task);
         }
-        // todo - ивент + channel. Возвращать на ивенте external_id таски
     }
 }

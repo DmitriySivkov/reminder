@@ -11,6 +11,13 @@ export const useTaskStore = defineStore("task", {
 		},
 		addTask(task) {
 			this.data.unshift(task)
-		}
+		},
+		setTaskField({ taskId, fields }) {
+			let task = this.data.find((t) => t.id === taskId)
+
+			if (!task) return
+
+			Object.assign(task, fields)
+		},
 	}
 })

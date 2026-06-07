@@ -139,6 +139,7 @@ const clearGroupUuid = () => {
 				/>
 			</div>
 			<q-card-section class="q-pa-none q-mb-md text-center">
+				2b17c54c-cf73-41bb-af1a-d67b7cb80223
 				<div class="text-h5">Стать участником группы</div>
 			</q-card-section>
 

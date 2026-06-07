@@ -6,7 +6,6 @@ import { useTaskStore } from "src/stores/task"
 import { useGroupStore } from "src/stores/group"
 
 export default async ({ app, router, store }) => {
-	// Define services as unique
 	const sqliteServ = new SqliteService()
 	const dbVersionServ = new DbVersionService()
 	const storageServ = new StorageService(sqliteServ, dbVersionServ)
@@ -44,10 +43,14 @@ export default async ({ app, router, store }) => {
 }
 
 const getTasks = (storageServ) => {
+	// todo - move query to task model or something like this - to reuse same query across the project
 	const sql = "" +
 		"SELECT tasks.*, " +
 		"groups.name as group_name, " +
+		"groups.external_id as group_external_id, " +
+		"groups.uuid as group_uuid, " +
 		"users.name as user_name, " +
+		"users.external_id as user_external_id, " +
 		"users.display_name as user_display_name, " +
 		"users.is_device_user as is_device_user " +
 		"FROM tasks " +

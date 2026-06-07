@@ -63,6 +63,7 @@ const addTask = async() => {
 				external_id: null,
 				group_id: selectedGroup.value.id,
 				user_id: selectedUser.value.id,
+				owner_id: userStore.data.id,
 				headline: taskHeadline.value,
 				text: taskText.value
 			})
@@ -81,17 +82,16 @@ const addTask = async() => {
 
 		isSuccessful.value = true
 
-		notifySuccess({
-			message: `Добавлено новое задание для пользователя ${selectedUser.value.display_name ?? selectedUser.value.name}`,
-			timeout: 3000,
-			position: "bottom",
-			classes: "full-width text-center"
-		})
-
 		setTimeout(() => {
 			isLoading.value = false
+			notifySuccess({
+				message: `Добавлено новое задание для пользователя ${selectedUser.value.display_name ?? selectedUser.value.name}`,
+				timeout: 3000,
+				position: "bottom",
+				classes: "full-width text-center"
+			})
 			onDialogOK(newTask)
-		}, 700)
+		}, 1000)
 
 		return
 	}
@@ -103,7 +103,7 @@ const addTask = async() => {
 		headline: taskHeadline.value,
 		text: taskText.value,
 	})
-	// todo - owner_id - добавить к таске чтобы видеть от кого задача
+
 	promise.then(async(response) => {
 		let newTask = null
 
@@ -112,6 +112,7 @@ const addTask = async() => {
 				external_id: response.data,
 				group_id: selectedGroup.value.id,
 				user_id: selectedUser.value.id,
+				owner_id: userStore.data.id,
 				headline: taskHeadline.value,
 				text: taskText.value
 			})
@@ -130,28 +131,28 @@ const addTask = async() => {
 
 		isSuccessful.value = true
 
-		notifySuccess({
-			message: `Добавлено новое задание для пользователя ${selectedUser.value.display_name ?? selectedUser.value.name}`,
-			timeout: 3000,
-			position: "bottom",
-			classes: "full-width text-center"
-		})
-
-		setTimeout(() => onDialogOK(newTask), 700)
+		setTimeout(() => {
+			isLoading.value = false
+			notifySuccess({
+				message: `Добавлено новое задание для пользователя ${selectedUser.value.display_name ?? selectedUser.value.name}`,
+				timeout: 3000,
+				position: "bottom",
+				classes: "full-width text-center"
+			})
+			onDialogOK(newTask)
+		}, 1000)
 	})
 
 	promise.catch((error) => {
+		isLoading.value = false
 		notifyError({
 			message: error.response.data.message ?? "Что-то пошло не так",
 			timeout: 3000,
 			position: "bottom",
 			classes: "full-width text-center"
 		})
-
 		isSuccessful.value = false
 	})
-
-	promise.finally(() => isLoading.value = false)
 }
 
 const addTaskOnDevice = async (task) => {
