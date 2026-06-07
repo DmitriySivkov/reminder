@@ -38,7 +38,7 @@ const showAddTaskDialog = () => {
 //  todo - если переместить в onMounted, то работает верно
 //  todo - (вероятно из-за того, что ивент приходит раньше чем загружается приложение)
 watch(() => userStore.isConnected, (isConnected) => {
-	if (!isConnected) return
+	// if (!isConnected) return
 
 	const unsyncTasks = tasks.value.filter((t) => !t.external_id)
 

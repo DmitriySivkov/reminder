@@ -19,7 +19,6 @@ export const useSocketUserGroups = () => {
 			.on("publication", (ctx) => {
 				try {
 					if (ctx.data.event === "task.created") {
-						// todo - проверить добавление таски
 						syncTask(storageServ, ctx.data.model)
 					}
 				} catch (error) {
@@ -47,7 +46,7 @@ const syncTask = async(storageServ, externalTask) => {
 
 	const groupStore = useGroupStore()
 	const taskStore = useTaskStore()
-	// todo - что если приходят два разных таска с одним group_id и user_id
+
 	const group = groupStore.data.find((g) => g.uuid === externalTask.group.uuid)
 	const deviceTask = taskStore.data.find((t) => !t.external_id && t.group_id === group.id && t.user_id === user.id)
 
@@ -62,7 +61,6 @@ const syncTask = async(storageServ, externalTask) => {
 		})
 	} else {
 		const isOwner = externalTask.owner_id === userStore.data.external_id
-		console.log(isOwner)
 
 		if (!isOwner) {
 			const newTask = addTaskOnDevice({
